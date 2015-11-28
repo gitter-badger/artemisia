@@ -1,12 +1,39 @@
+import sbt.Keys._
+
+assemblySettings
 name := """ultron"""
-
 version := "1.0"
-
 scalaVersion := "2.11.7"
 
-// Change this to another test framework if you prefer
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
-// Uncomment to use Akka
-//libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.11"
+lazy val finalTest = taskKey[Unit]("customized full test")
+
+lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging).settings (
+  libraryDependencies ++= Dependencies.commonSettings,
+  libraryDependencies ++= Dependencies.coreSettings,
+
+  (dependencyClasspath in Test) <<= (dependencyClasspath in Test) map {
+    _.filterNot(_.data.name.contains("logback-classic"))
+  }
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
