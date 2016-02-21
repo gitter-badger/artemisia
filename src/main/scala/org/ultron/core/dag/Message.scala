@@ -3,7 +3,7 @@ package org.ultron.core.dag
 import com.typesafe.config.{ConfigRenderOptions, Config, ConfigFactory}
 import net.ceedubs.ficus.Ficus._
 import org.ultron.config.Keywords
-import org.ultron.task.Task
+import org.ultron.task.TaskHandler
 
 /**
  * Created by chlr on 1/7/16.
@@ -18,7 +18,7 @@ object Message {
 
   case class TaskFailed(name: String, task_stats: TaskStats, exception: Throwable) extends TaskCompleted
 
-  case class TaskWrapper(name: String,task: Task) extends Messageable
+  case class TaskWrapper(name: String,task: TaskHandler) extends Messageable
 
   case class TaskSuceeded(name: String, task_stats: TaskStats) extends TaskCompleted
 

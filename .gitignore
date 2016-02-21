@@ -1,7 +1,5 @@
 .idea/
-/RUNNING_PID
+RUNNING_PID
 /logs/
-/project/*-shim.sbt
-/project/project/
-/project/target/
-/target/
+target/
+project/

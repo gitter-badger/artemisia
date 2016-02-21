@@ -14,7 +14,7 @@ class GenericTaskSpec extends TestSpec {
   "The Task" must "retry a failing task for configured number of times" in {
     val task_config = GenericTaskSpec.getDefaultTaskConfig
 
-    val task = new Task(task_config) {
+    val task = new TaskHandler(task_config) {
       override protected def setup(): Unit = {}
       override protected def work(): Config = { throw new Exception("my own exception") }
       override protected def teardown(): Unit = {}
@@ -30,7 +30,7 @@ class GenericTaskSpec extends TestSpec {
   it must "stop retrying if it succeeds before retry limit" in {
 
     val task_config = GenericTaskSpec.getDefaultTaskConfig
-     val task = new Task(task_config) {
+     val task = new TaskHandler(task_config) {
        override protected def setup(): Unit = {}
        override protected def work(): Config = { if (this.getAttempts == 1) { throw new Exception("") } else { ConfigFactory.empty() } }
        override protected def teardown(): Unit = {}
@@ -41,7 +41,7 @@ class GenericTaskSpec extends TestSpec {
 
   it must "ignore failures in teardown phase" in {
     val task_config = GenericTaskSpec.getDefaultTaskConfig
-    val task = new Task(task_config) {
+    val task = new TaskHandler(task_config) {
       override protected def setup(): Unit = {}
       override protected def work(): Config = {  ConfigFactory.empty }
       override protected def teardown(): Unit = { throw new Exception("my own exception") }
@@ -52,7 +52,7 @@ class GenericTaskSpec extends TestSpec {
 
   it must "skip execution if the task_option flag is set" in {
     val task_config = TaskConfig(task_name = "test_task",retry_limit = 3, cooldown = 10 milliseconds, skip_execution = true)
-    val task = new Task(task_config) {
+    val task = new TaskHandler(task_config) {
       override protected def setup(): Unit = { throw new Exception("my own exception") }
       override protected def work(): Config = {  throw new Exception("my own exception") }
       override protected def teardown(): Unit = { throw new Exception("my own exception") }

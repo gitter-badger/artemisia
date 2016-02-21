@@ -1,22 +1,19 @@
 import sbt.Keys._
 
 assemblySettings
-name := """ultron"""
-version := "1.0"
-scalaVersion := "2.11.7"
 
+lazy val ultron = (project in file(".")).enablePlugins(JavaAppPackaging)
+  .settings(General.settings("ultron"))
+  .settings(
+  libraryDependencies ++= Ultron.dependencies
+).dependsOn(commons,localhost)
 
-lazy val finalTest = taskKey[Unit]("customized full test")
+lazy val localhost = (project in General.componentBase / "localhost").enablePlugins(JavaAppPackaging)
+  .settings(General.settings("localhost")).dependsOn(commons)
 
-lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging).settings (
-  libraryDependencies ++= Dependencies.commonSettings,
-  libraryDependencies ++= Dependencies.coreSettings,
-
-  (dependencyClasspath in Test) <<= (dependencyClasspath in Test) map {
-    _.filterNot(_.data.name.contains("logback-classic"))
-  }
-
-)
+lazy val commons = (project in General.subprojectBase / "commons").enablePlugins(JavaAppPackaging)
+  .settings(General.settings("commons"))
+  .settings(libraryDependencies ++= Commons.dependencies)
 
 
 

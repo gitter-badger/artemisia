@@ -4,6 +4,7 @@ import com.typesafe.config.{ConfigFactory, Config}
 import org.ultron.config.Keywords
 import org.ultron.core.AppLogger
 import org.ultron.core.dag.Status
+import org.ultron.logging.LogSource
 import org.ultron.util.Util
 
 import scala.util.{Failure, Success, Try}
@@ -13,13 +14,9 @@ import scala.util.{Failure, Success, Try}
  * Created by chlr on 1/7/16.
  */
 
-abstract class Task(val task_metadata: TaskConfig) {
+class TaskHandler(val task_metadata: TaskConfig, val task: Task) {
 
-
-  implicit val source: Task = this
-  protected def setup(): Unit
-  protected def work(): Config
-  protected def teardown(): Unit
+  task.setLogSource(LogSource(task_metadata.task_name))
   private var attempts = 0
   private var status: Status.Value = Status.UNKNOWN
 
@@ -28,13 +25,13 @@ abstract class Task(val task_metadata: TaskConfig) {
       AppLogger info s"running task with total allowed attempts of ${task_metadata.retry_limit}"
       val result = run(max_attempts = task_metadata.retry_limit) {
           AppLogger debug "executing setup phase of the task"
-          this.setup()
+          task.setup()
           AppLogger debug "executing work phase of the task"
-           this.work()
+          task.work()
       }
       try {
         AppLogger debug "executing teardown phase of the task"
-        this.teardown()
+        task.teardown()
       } catch {
         case ex: Throwable => AppLogger warn s"teardown phase failed with exception ${ex.getClass.getCanonicalName} with message ${ex.getMessage}"
       }

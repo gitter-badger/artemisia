@@ -1,6 +1,6 @@
 package org.ultron
 
-import org.ultron.task.{TestComponent, Component}
+import org.ultron.task.TestComponent
 import org.ultron.util.{OSUtil, OSUtilTestImpl}
 import scaldi.{Injector, Module}
 
@@ -13,7 +13,7 @@ package object core {
   def getWireObject = {
     new Module {
       bind[OSUtil] to new OSUtilTestImpl
-      bind[Component] identifiedBy "TestComponent" to new TestComponent
+      bind[ComponentDispatcher] identifiedBy "TestComponent" to new TestComponent
     }
   }
 }

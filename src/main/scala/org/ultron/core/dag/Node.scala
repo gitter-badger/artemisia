@@ -3,9 +3,8 @@ package org.ultron.core.dag
 import com.typesafe.config.{Config, ConfigFactory}
 import net.ceedubs.ficus.Ficus._
 import org.ultron.config.{AppContext, Keywords}
-import org.ultron.core.{AppLogger, dag, wire}
-import org.ultron.task.{Component, Task}
-import scaldi.Injectable._
+import org.ultron.core.{AppLogger, dag}
+import org.ultron.task.{TaskConfig, TaskHandler}
 
 import scala.collection.LinearSeq
 
@@ -30,9 +29,10 @@ class Node(val name: String, var payload: Config) {
     }) && this.status == dag.Status.READY // forall for Nil returns true
   }
 
-  def getNodeTask(app_context: AppContext): Task = {
-    val component = inject[Component] (payload.getString(Keywords.Task.COMPONENT))
-    component.getTask(payload.as[String](Keywords.Task.TASK),name,payload,app_context)
+  def getNodeTask(app_context: AppContext): TaskHandler = {
+    val component = app_context.componentMapper(payload.as[String](Keywords.Task.COMPONENT))
+    val task = component.dispatch(payload.as[String](Keywords.Task.TASK),payload.getConfig(Keywords.Task.PARAMS))
+    new TaskHandler(TaskConfig(name,payload,app_context),task)
   }
 
   override def equals(that: Any): Boolean = {

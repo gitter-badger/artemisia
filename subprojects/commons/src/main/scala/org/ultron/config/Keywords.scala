@@ -29,6 +29,7 @@ object Keywords {
     val COOLDOWN = "cooldown"
     val ATTEMPT = "attempts"
     val PARAMETERS = "params"
+    val PARAMS = "params"
   }
 
   object TaskStats {

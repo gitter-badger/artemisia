@@ -7,7 +7,7 @@ import net.ceedubs.ficus.Ficus._
 import org.ultron.ActorTestSpec
 import org.ultron.config.{AppContext, AppSetting}
 import org.ultron.core.dag.Message._
-import org.ultron.task.{TestFailTask, Task, TestAdderTask}
+import org.ultron.task.{TestFailTask, TaskHandler, TestAdderTask}
 import scala.concurrent.duration._
 
 /**
@@ -37,7 +37,7 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step1",task: Task) => {
+      case TaskWrapper("step1",task: TaskHandler) => {
         task mustBe a[TestAdderTask]
       }
     }
@@ -53,7 +53,7 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step2",task: Task) => {
+      case TaskWrapper("step2",task: TaskHandler) => {
         task mustBe a[TestAdderTask]
       }
     }
@@ -75,7 +75,7 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step1",task: Task) => {
+      case TaskWrapper("step1",task: TaskHandler) => {
         task mustBe a[TestAdderTask]
       }
     }
@@ -91,7 +91,7 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step2",task: Task) => {
+      case TaskWrapper("step2",task: TaskHandler) => {
         task mustBe a[TestFailTask]
       }
     }

@@ -7,6 +7,7 @@ import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import org.ultron.core.AppLogger
 import org.ultron.core.dag.Message.TaskStats
+import org.ultron.task.Component
 import org.ultron.util.Util
 import scala.collection.mutable
 import scala.concurrent.duration.FiniteDuration
@@ -35,7 +36,9 @@ class AppContext(cmd_line_param: AppSetting) {
   val run_id: String = cmd_line_param.run_id.getOrElse(Util.getUUID)
   val working_dir: String = cmd_line_param.working_dir.getOrElse(Util.joinPath(payload.getString("__setting__.core.working_dir"),run_id))
   val checkpoints: mutable.Map[String,TaskStats] = if (skip_checkpoints) mutable.Map() else readCheckpoint
-  
+  val componentMapper: Map[String,Component] = payload.as[Map[String,String]]("__setting__.components") map {
+    case (name,component) => { println(component) ;(name, Class.forName(component).getConstructor().newInstance().asInstanceOf[Component] ) }
+  }
 
   private[config] def getConfigObject(cmd_line_param: AppSetting): Config = {
     val empty_object = ConfigFactory.empty()
