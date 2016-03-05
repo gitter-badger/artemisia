@@ -12,7 +12,7 @@ import scaldi.Injectable._
  */
 
 class UtilSpec extends TestSpec {
-  val os_util: OSUtilTestImpl = inject[OSUtil].asInstanceOf[OSUtilTestImpl]
+  val os_util = inject[OSUtil].asInstanceOf[OSUtilTestImpl]
   override def beforeEach() = {
 
   }
