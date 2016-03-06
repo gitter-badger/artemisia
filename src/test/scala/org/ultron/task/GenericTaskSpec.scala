@@ -14,12 +14,12 @@ class GenericTaskSpec extends TestSpec {
   "The Task" must "retry a failing task for configured number of times" in {
     val task_config = GenericTaskSpec.getDefaultTaskConfig
 
-    val task = new TaskHandler(task_config) {
-      override protected def setup(): Unit = {}
-      override protected def work(): Config = { throw new Exception("my own exception") }
-      override protected def teardown(): Unit = {}
+    val fail_task = new Task {
+      override def work(): Config = { ConfigFactory.empty() }
+      override def setup(): Unit = { throw new Exception("fail") }
+      override def teardown(): Unit = {}
     }
-
+    val task = new TaskHandler(task_config,fail_task)
     val result = task.execute()
     result.isFailure must be (true)
     result.failed.get mustBe an [Exception]
@@ -30,33 +30,37 @@ class GenericTaskSpec extends TestSpec {
   it must "stop retrying if it succeeds before retry limit" in {
 
     val task_config = GenericTaskSpec.getDefaultTaskConfig
-     val task = new TaskHandler(task_config) {
-       override protected def setup(): Unit = {}
-       override protected def work(): Config = { if (this.getAttempts == 1) { throw new Exception("") } else { ConfigFactory.empty() } }
-       override protected def teardown(): Unit = {}
+     val succeed_on_2_attempt_task = new Task {
+       var attempts = 1
+       override def setup(): Unit = {}
+       override def work(): Config = { if (this.attempts == 1) {  attempts += 1 ; throw new Exception("") } else { ConfigFactory.empty() } }
+       override def teardown(): Unit = {}
      }
+    val task = new TaskHandler(task_config,succeed_on_2_attempt_task)
     task.execute()
     task.getAttempts must be (2)
   }
 
   it must "ignore failures in teardown phase" in {
     val task_config = GenericTaskSpec.getDefaultTaskConfig
-    val task = new TaskHandler(task_config) {
-      override protected def setup(): Unit = {}
-      override protected def work(): Config = {  ConfigFactory.empty }
-      override protected def teardown(): Unit = { throw new Exception("my own exception") }
+    val fail_on_teardown_task = new Task() {
+      override def setup(): Unit = {}
+      override def work(): Config = {  ConfigFactory.empty }
+      override def teardown(): Unit = { throw new Exception("my own exception") }
     }
+    val task = new TaskHandler(task_config,fail_on_teardown_task)
     val result = task.execute()
     result.get must equal (ConfigFactory.empty)
   }
 
   it must "skip execution if the task_option flag is set" in {
     val task_config = TaskConfig(task_name = "test_task",retry_limit = 3, cooldown = 10 milliseconds, skip_execution = true)
-    val task = new TaskHandler(task_config) {
-      override protected def setup(): Unit = { throw new Exception("my own exception") }
-      override protected def work(): Config = {  throw new Exception("my own exception") }
-      override protected def teardown(): Unit = { throw new Exception("my own exception") }
+    val a_dummy_task = new Task {
+      override def setup(): Unit = { throw new Exception("my own exception") }
+      override def work(): Config = {  throw new Exception("my own exception") }
+      override def teardown(): Unit = { throw new Exception("my own exception") }
     }
+    val task = new TaskHandler(task_config,a_dummy_task)
     val result = task.execute()
     task.getStatus must be (Status.SKIPPED)
     task.getAttempts must be (0)

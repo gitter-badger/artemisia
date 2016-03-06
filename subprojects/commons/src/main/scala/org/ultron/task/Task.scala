@@ -14,8 +14,9 @@ trait Task {
     this.source = source
   }
 
-  def setup(): Unit
-  def work(): Config
-  def teardown(): Unit
+  protected[task] def setup(): Unit
+  protected[task] def work(): Config
+  protected[task] def teardown(): Unit
+
 
 }

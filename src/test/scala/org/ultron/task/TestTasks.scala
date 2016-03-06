@@ -6,25 +6,25 @@ import net.ceedubs.ficus.Ficus._
 /**
  * Created by chlr on 1/26/16.
  */
-class TestAdderTask(val num1: Int, val num2: Int, val result: String ,task_config :TaskConfig) extends TaskHandler(task_config) {
+class TestAdderTask(val num1: Int, val num2: Int, val result: String) extends Task {
 
-  override protected def setup(): Unit = {}
-  override protected def work(): Config = { ConfigFactory parseString s"$result = ${num1 + num2}" }
-  override protected def teardown(): Unit = {}
+  override def setup(): Unit = {}
+  override def work(): Config = { ConfigFactory parseString s"$result = ${num1 + num2}" }
+  override def teardown(): Unit = {}
 
 }
 
 object TestAdderTask {
-  def apply(param: Config, task_config: TaskConfig) = {
-    new TestAdderTask(param.as[Int]("num1"),param.as[Int]("num2"),param.as[String]("result_var"),task_config)
+  def apply(param: Config) = {
+    new TestAdderTask(param.as[Int]("num1"),param.as[Int]("num2"),param.as[String]("result_var"))
   }
 }
 
 
-class TestFailTask(task_config :TaskConfig) extends TaskHandler(task_config) {
+class TestFailTask() extends Task {
 
-  override protected def setup(): Unit = {}
-  override protected def work(): Config = { throw new Exception("FailTask always fail") }
-  override protected def teardown(): Unit = {}
+  override def setup(): Unit = {}
+  override def work(): Config = { throw new Exception("FailTask always fail") }
+  override def teardown(): Unit = {}
 
 }

@@ -37,8 +37,8 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step1",task: TaskHandler) => {
-        task mustBe a[TestAdderTask]
+      case TaskWrapper("step1",task_handler: TaskHandler) => {
+        task_handler.task mustBe a[TestAdderTask]
       }
     }
 
@@ -53,8 +53,8 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step2",task: TaskHandler) => {
-        task mustBe a[TestAdderTask]
+      case TaskWrapper("step2",task_handler: TaskHandler) => {
+        task_handler.task mustBe a[TestAdderTask]
       }
     }
 
@@ -75,8 +75,8 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step1",task: TaskHandler) => {
-        task mustBe a[TestAdderTask]
+      case TaskWrapper("step1",task_handler: TaskHandler) => {
+        task_handler.task mustBe a[TestAdderTask]
       }
     }
 
@@ -91,8 +91,8 @@ class DagPlayerSpec extends ActorTestSpec {
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
-      case TaskWrapper("step2",task: TaskHandler) => {
-        task mustBe a[TestFailTask]
+      case TaskWrapper("step2",task_handler: TaskHandler) => {
+        task_handler.task mustBe a[TestFailTask]
       }
     }
 

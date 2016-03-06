@@ -10,7 +10,7 @@ import org.ultron.task.Task
  */
 
 
-class DummyTask(val dummy_param1: Int, val dummy_param2: Boolean) extends Task {
+class DummyTask(val dummy_param1: Int , val dummy_param2: Boolean) extends Task {
 
   override def setup(): Unit = {
     AppLogger info s"IN SETUP with $dummy_param1 and $dummy_param2"
