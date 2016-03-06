@@ -32,7 +32,7 @@ object Command {
       context.putProperty("log.file.level", app_context.logging.file_trace_level)
       context.putProperty("env.working_dir", app_context.core_setting.working_dir)
       context.putProperty("workflow_id", app_context.run_id)
-      jc.doConfigure(this.getClass.getResource("/logback_config.xml").getFile)
+      jc.doConfigure(this.getClass.getResourceAsStream("/logback_config.xml"))
   }
 
 

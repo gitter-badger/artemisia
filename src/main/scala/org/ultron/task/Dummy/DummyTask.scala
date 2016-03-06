@@ -18,7 +18,6 @@ class DummyTask(val dummy_param1: Int , val dummy_param2: Boolean) extends Task 
 
   override def work(): Config = {
     Thread.sleep(1000)
-    println(10/dummy_param1)
     AppLogger info s"In Work  $dummy_param1 and $dummy_param2"
     ConfigFactory parseString
       s"""
