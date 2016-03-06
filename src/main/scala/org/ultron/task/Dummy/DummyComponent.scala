@@ -9,9 +9,9 @@ import org.ultron.task._
 
 class DummyComponent extends Component {
 
-  override def dispatch(task: String,config: Config) = {
+  override def dispatch(task : String, name: String, config: Config) = {
      task match {
-       case _ => DummyTask(config)
+       case _ => DummyTask(name, config)
      }
   }
 }

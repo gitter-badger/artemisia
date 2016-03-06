@@ -2,7 +2,7 @@ package org.ultron.core.dag
 
 import com.typesafe.config.ConfigFactory
 import org.ultron.TestSpec
-import org.ultron.config.Keywords
+import org.ultron.core.Keywords
 
 /**
  * Created by chlr on 1/23/16.

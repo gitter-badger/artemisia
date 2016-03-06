@@ -1,12 +1,12 @@
 package org.ultron.task
 
 import com.typesafe.config.{Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 
 /**
  * Created by chlr on 1/26/16.
  */
-class TestAdderTask(val num1: Int, val num2: Int, val result: String) extends Task {
+class TestAdderTask(val num1: Int, val num2: Int, val result: String) extends Task("testTask") {
 
   override def setup(): Unit = {}
   override def work(): Config = { ConfigFactory parseString s"$result = ${num1 + num2}" }
@@ -21,7 +21,7 @@ object TestAdderTask {
 }
 
 
-class TestFailTask() extends Task {
+class TestFailTask() extends Task("testTask") {
 
   override def setup(): Unit = {}
   override def work(): Config = { throw new Exception("FailTask always fail") }

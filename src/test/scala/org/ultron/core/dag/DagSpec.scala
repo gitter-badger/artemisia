@@ -154,7 +154,7 @@ class DagSpec extends TestSpec {
 object DagSpec {
 
   def taskStats(name: String, status: Status.Value) = {
-    TaskStats(start_time = Util.currentTime, end_time = Util.currentTime, status =  status, attempts = 1, task_output = ConfigFactory.empty())
+    TaskStats(startTime = Util.currentTime, endTime = Util.currentTime, status =  status, attempts = 1, taskOutput = ConfigFactory.empty())
   }
 
   def makeDagFromFile(file: String) = {

@@ -1,16 +1,14 @@
 package org.ultron.util
 
 import org.ultron.TestSpec
+import org.ultron.core.env
 
 /**
  * Created by chlr on 12/11/15.
  */
 class OSUtilSpec extends TestSpec  {
 
-  val util = new OSUtil {
-    override def getSystemVariable(variable: String): Option[String] = ???
-    override def getSystemProperties(variable: String): Option[String] = ???
-  }
+  val util = env.osUtil
 
   "joinPath" must "Join multiple path strings into valid path string" in {
     var path1 = "/var/tmp"

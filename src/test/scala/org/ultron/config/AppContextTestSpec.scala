@@ -3,12 +3,12 @@ package org.ultron.config
 import java.io.{File, FileNotFoundException}
 
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
 import org.ultron.TestSpec
 import org.ultron.core.dag.Message.TaskStats
-import org.ultron.core.wire
-import org.ultron.util.{OSUtil, OSUtilTestImpl, Util}
-import scaldi.Injectable._
+import org.ultron.core.{Keywords, env}
+import org.ultron.util.FileSystemUtil
+import org.ultron.util.HoconConfigUtil.Handler
+
 
 /**
 *  Created by chlr on 12/4/15.
@@ -16,12 +16,13 @@ import scaldi.Injectable._
 class AppContextTestSpec extends TestSpec {
 
   var cmd_line_params: AppSetting = _
-  var os_util: OSUtilTestImpl = _
   var sys_var:(String,String) = _
   var app_context: AppContext = _
+  var os_util: testEnv.TestOsUtil = _
+
 
   override def beforeEach(): Unit = {
-    os_util  = inject[OSUtil].asInstanceOf[OSUtilTestImpl]
+    os_util  = env.osUtil.asInstanceOf[testEnv.TestOsUtil]
     sys_var = Keywords.Config.GLOBAL_FILE_REF_VAR -> this.getClass.getResource("/global_config.conf").getFile
     cmd_line_params = AppContextTestSpec.defualtTestCmdLineParams
   }
@@ -60,7 +61,7 @@ class AppContextTestSpec extends TestSpec {
   it must "throw an FileNotFoundException when the config file doesn't exist" in  {
 
     os_util.withSysVar(Map(sys_var)) {
-      val config_file = "/not_exists_file"
+      val config_file = "/not_exists_file1"
       cmd_line_params = cmd_line_params.copy(config = Some(config_file))
       info("intercepting exception")
       val ex = intercept[FileNotFoundException] {
@@ -87,7 +88,7 @@ class AppContextTestSpec extends TestSpec {
     val cmd = cmd_line_params.copy(working_dir = Some(test_working_dir))
     app_context = new AppContext(cmd)
     app_context.writeCheckpoint(task_name,AppContextTestSpec.getTaskStatsConfigObject)
-    val checkpoint = ConfigFactory.parseFile(new File(Util.joinPath(test_working_dir,"checkpoint.conf")))
+    val checkpoint = ConfigFactory.parseFile(new File(FileSystemUtil.joinPath(test_working_dir,"checkpoint.conf")))
     info("validating end_time")
     checkpoint.getString(s"$task_name.${Keywords.TaskStats.END_TIME}") must be ("2016-01-18 22:27:52")
     info("validating start_time")
@@ -104,9 +105,9 @@ class AppContextTestSpec extends TestSpec {
     val checkpoints = app_context.readCheckpoint
     val task_stats = checkpoints(task_name)
     info("validating end_time")
-    task_stats.end_time must be ("2016-01-18 22:27:52")
+    task_stats.endTime must be ("2016-01-18 22:27:52")
     info("validating start_time")
-    task_stats.start_time must be ("2016-01-18 22:27:51")
+    task_stats.startTime must be ("2016-01-18 22:27:51")
   }
 
 

@@ -1,25 +1,26 @@
 package org.ultron.task.dummy
 
 import com.typesafe.config.{Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.core.AppLogger
 import org.ultron.task.Task
+import org.ultron.util.Util
+
 
 /**
  * Created by chlr on 1/9/16.
  */
 
 
-class DummyTask(val dummy_param1: Int , val dummy_param2: Boolean) extends Task {
+class DummyTask(name: String = Util.getUUID,val dummyParam1: Int , val dummyParam2: Boolean) extends Task(name) {
 
   override def setup(): Unit = {
-    AppLogger info s"IN SETUP with $dummy_param1 and $dummy_param2"
+    AppLogger info s"IN SETUP with $dummyParam1 and $dummyParam2"
   }
 
   override def work(): Config = {
     Thread.sleep(1000)
-    println(10/dummy_param1)
-    AppLogger info s"In Work  $dummy_param1 and $dummy_param2"
+    AppLogger info s"In Work  $dummyParam1 and $dummyParam2"
     ConfigFactory parseString
       s"""
         | new_variable = 1000
@@ -27,7 +28,7 @@ class DummyTask(val dummy_param1: Int , val dummy_param2: Boolean) extends Task 
   }
 
   override def teardown(): Unit = {
-    AppLogger info s"In Teardown  $dummy_param1 and $dummy_param2"
+    AppLogger info s"In Teardown  $dummyParam1 and $dummyParam2"
   }
 
 }
@@ -40,8 +41,8 @@ object DummyTask {
     """.stripMargin
   }
 
-  def apply(input_config: Config) = {
-    val config = input_config withFallback default_config
-    new DummyTask(config.as[Int]("dummy_param1"),config.as[Boolean]("dummy_param2"))
+  def apply(name: String,inputConfig: Config) = {
+    val config = inputConfig withFallback default_config
+    new DummyTask(name,config.as[Int]("dummy_param1"),config.as[Boolean]("dummy_param2"))
   }
 }

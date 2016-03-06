@@ -9,7 +9,7 @@
             <level>${log.console.level}</level>
         </filter>
         <encoder>
-            <pattern>%d{ISO8601}: %msg%n</pattern>
+            <pattern>%d{ISO8601}: %thread -> %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -20,7 +20,7 @@
             <level>${log.file.level}</level>
         </filter>
         <encoder>
-            <pattern>%d{ISO8601} %-5level %logger{0} - %msg%n</pattern>
+            <pattern>%d{ISO8601} [%thread] %-5level %logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
 

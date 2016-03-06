@@ -1,9 +1,9 @@
 package org.ultron.core.dag
 
 import com.typesafe.config.{Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
-import org.ultron.config.{AppContext, Keywords}
-import org.ultron.core.{AppLogger, dag}
+import org.ultron.util.HoconConfigUtil.Handler
+import org.ultron.config.AppContext
+import org.ultron.core.{Keywords, AppLogger, dag}
 import org.ultron.task.{TaskConfig, TaskHandler}
 
 import scala.collection.LinearSeq
@@ -19,7 +19,7 @@ class Node(val name: String, var payload: Config) {
   */
 
   private var status = Status.READY
-  val ignore_failure: Boolean = false
+  val ignoreFailure: Boolean = false
   var parents: LinearSeq[Node] = Nil
 
   def isRunnable = {
@@ -31,7 +31,7 @@ class Node(val name: String, var payload: Config) {
 
   def getNodeTask(app_context: AppContext): TaskHandler = {
     val component = app_context.componentMapper(payload.as[String](Keywords.Task.COMPONENT))
-    val task = component.dispatch(payload.as[String](Keywords.Task.TASK),payload.getConfig(Keywords.Task.PARAMS))
+    val task = component.dispatch(payload.as[String](Keywords.Task.TASK), name, payload.getConfig(Keywords.Task.PARAMS))
     new TaskHandler(TaskConfig(name,payload,app_context),task)
   }
 
@@ -50,25 +50,25 @@ class Node(val name: String, var payload: Config) {
 
   def getStatus = status
 
-  def applyStatusFromCheckpoint(checkpoint_status: Status.Value): Unit = {
+  def applyStatusFromCheckpoint(checkpointStatus: Status.Value): Unit = {
     if (status == Status.SUCCEEDED || status == Status.SKIPPED) {
-      AppLogger info s"applying checkpoint status $checkpoint_status for node $name"
-      this.status = checkpoint_status
+      AppLogger info s"applying checkpoint status $checkpointStatus for node $name"
+      this.status = checkpointStatus
     }
-    checkpoint_status match {
+    checkpointStatus match {
       case Status.SUCCEEDED => {
-        AppLogger info s"marking node $name status as $checkpoint_status from checkpoint"
-        this.status = checkpoint_status
+        AppLogger info s"marking node $name status as $checkpointStatus from checkpoint"
+        this.status = checkpointStatus
       }
       case Status.SKIPPED => {
-        AppLogger info s"marking node $name status as $checkpoint_status from checkpoint"
-        this.status = checkpoint_status
+        AppLogger info s"marking node $name status as $checkpointStatus from checkpoint"
+        this.status = checkpointStatus
       }
       case Status.FAILED => {
         AppLogger info s"detected node $name from checkpoint has ${Status.FAILED}. setting node status as ${Status.READY}"
       }
       case _ => {
-        AppLogger warn s"node $name has an unhandled status of $checkpoint_status}. setting node status as ${Status.READY}"
+        AppLogger warn s"node $name has an unhandled status of $checkpointStatus}. setting node status as ${Status.READY}"
       }
     }
   }

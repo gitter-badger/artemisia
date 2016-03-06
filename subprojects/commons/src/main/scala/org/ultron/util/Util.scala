@@ -6,27 +6,38 @@ import java.nio.file.{Files, Paths}
 import com.typesafe.config.{Config, ConfigFactory}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.slf4j.LoggerFactory
-import org.ultron.config.Keywords
-import org.ultron.core.{AppLogger, wire}
-import scaldi.Injectable._
+import org.ultron.core.{AppLogger, Keywords, env}
 
 /**
  * Created by chlr on 11/29/15.
  */
+
+
+/**
+ * an object with utility functions.
+ *
+ */
 object Util {
 
-  val logger = LoggerFactory.getLogger(this.getClass)
-
-  def getGlobalConfigFileLocation(default_file: String = Keywords.Config.DEFUALT_GLOBAL_CONFIG_FILE): Option[String] = {
-    val os_util = inject[OSUtil]
+  /**
+   * 
+   * @param globalConfigFilePath Global config file path
+   * @return parsed Config object of the global config file
+   */
+  def getGlobalConfigFileLocation(globalConfigFilePath: String = Keywords.Config.DEFUALT_GLOBAL_CONFIG_FILE): Option[String] = {
+    val os_util = env.osUtil
     val result = os_util.getSystemVariable(Keywords.Config.GLOBAL_FILE_REF_VAR)
     val global_config = if ( result.isEmpty )
-        if (Files exists Paths.get(default_file)) Some(default_file) else None
+        if (Files exists Paths.get(globalConfigFilePath)) Some(globalConfigFilePath) else None
     else result
     global_config
   }
 
+  /**
+   *
+   * @param path path of the HOCON file to be read
+   * @return parsed Config object of the file
+   */
   def readConfigFile(path: String): Config = {
     if(!Files.exists(Paths.get(path))) {
       AppLogger error s"requested config file $path not found"
@@ -35,32 +46,22 @@ object Util {
     ConfigFactory.parseFile(new File(path))
   }
 
-  def readResource(resource: String) = {
-    val resource_stream = this.getClass.getResourceAsStream(resource)
-    val buffered = new BufferedReader(new InputStreamReader(resource_stream))
-    buffered.lines().toArray.mkString("\n")
-  }
 
-  def writeFile(content: String,file: String, append: Boolean = true) {
-    val handle = new File(file)
-    handle.getParentFile.mkdirs()
-    val writer = new BufferedWriter(new FileWriter(handle,append))
-    writer.write(content)
-    writer.close()
-  }
-
-  def fileExists(file: String): Boolean = {
-    new File(file).exists()
-  }
-
+  /**
+   * generates a UUID
+   *
+   * @return UUID
+   */
   def getUUID = {
     java.util.UUID.randomUUID.toString
   }
 
-  def joinPath(path: String*) = {
-    path.foldLeft(System.getProperty("file.separator"))((a: String, b: String) => new File(a, b).toString)
-  }
-
+  /**
+   * prints stacktrace of an Exception
+   *
+   * @param ex Throwable object to be print
+   * @return string of the stacktrace
+   */
   def printStackTrace(ex: Throwable) = {
     val sw = new StringWriter()
     val pw = new PrintWriter(sw)
@@ -68,9 +69,21 @@ object Util {
     sw.toString
   }
 
+  /**
+   **
+   * @return current time in format "yyyy-MM-dd HH:mm:ss"
+   */
   def currentTime : String = {
       val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
       formatter.print(new DateTime())
+  }
+
+  def prettyPrintAsciiTable(content: String, heading: String, width: Int = 80): String = {
+   s"""
+      |${"=" * (width / 2) } $heading ${"=" * (width / 2)}
+      |$content
+      |${"=" * (width / 2) } $heading ${"=" * (width / 2)}
+    """.stripMargin
   }
 
 }
