@@ -7,8 +7,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.slf4j.LoggerFactory
-import org.ultron.config.Keywords
-import org.ultron.core.{AppLogger, wire}
+import org.ultron.core.{Keywords, AppLogger, wire}
 import scaldi.Injectable._
 
 /**
@@ -35,30 +34,8 @@ object Util {
     ConfigFactory.parseFile(new File(path))
   }
 
-  def readResource(resource: String) = {
-    val resource_stream = this.getClass.getResourceAsStream(resource)
-    val buffered = new BufferedReader(new InputStreamReader(resource_stream))
-    buffered.lines().toArray.mkString("\n")
-  }
-
-  def writeFile(content: String,file: String, append: Boolean = true) {
-    val handle = new File(file)
-    handle.getParentFile.mkdirs()
-    val writer = new BufferedWriter(new FileWriter(handle,append))
-    writer.write(content)
-    writer.close()
-  }
-
-  def fileExists(file: String): Boolean = {
-    new File(file).exists()
-  }
-
   def getUUID = {
     java.util.UUID.randomUUID.toString
-  }
-
-  def joinPath(path: String*) = {
-    path.foldLeft(System.getProperty("file.separator"))((a: String, b: String) => new File(a, b).toString)
   }
 
   def printStackTrace(ex: Throwable) = {

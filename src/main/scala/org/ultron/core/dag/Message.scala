@@ -2,7 +2,7 @@ package org.ultron.core.dag
 
 import com.typesafe.config.{ConfigRenderOptions, Config, ConfigFactory}
 import net.ceedubs.ficus.Ficus._
-import org.ultron.config.Keywords
+import org.ultron.core.Keywords
 import org.ultron.task.TaskHandler
 
 /**

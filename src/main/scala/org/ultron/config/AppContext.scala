@@ -5,10 +5,10 @@ package org.ultron.config
 import com.typesafe.config.{ConfigObject, Config, ConfigFactory, ConfigRenderOptions}
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
-import org.ultron.core.AppLogger
+import org.ultron.core.{Keywords, AppLogger}
 import org.ultron.core.dag.Message.TaskStats
 import org.ultron.task.Component
-import org.ultron.util.Util
+import org.ultron.util.{FileSystemUtil, Util}
 import scala.collection.mutable
 import scala.concurrent.duration.FiniteDuration
 import scala.collection.JavaConversions._
@@ -34,7 +34,7 @@ class AppContext(cmd_line_param: AppSetting) {
   val dag_setting: DagSetting = payload.as[DagSetting]("__setting__.dag")
   val core_setting: CoreSetting = payload.as[CoreSetting]("__setting__.core")
   val run_id: String = cmd_line_param.run_id.getOrElse(Util.getUUID)
-  val working_dir: String = cmd_line_param.working_dir.getOrElse(Util.joinPath(payload.getString("__setting__.core.working_dir"),run_id))
+  val working_dir: String = cmd_line_param.working_dir.getOrElse(FileSystemUtil.joinPath(payload.getString("__setting__.core.working_dir"),run_id))
   val checkpoints: mutable.Map[String,TaskStats] = if (skip_checkpoints) mutable.Map() else readCheckpoint
   val componentMapper: Map[String,Component] = payload.as[Map[String,String]]("__setting__.components") map {
     case (name,component) => { (name, Class.forName(component).getConstructor().newInstance().asInstanceOf[Component] ) }
@@ -42,7 +42,7 @@ class AppContext(cmd_line_param: AppSetting) {
 
   private[config] def getConfigObject(cmd_line_param: AppSetting): Config = {
     val empty_object = ConfigFactory.empty()
-    val reference = ConfigFactory parseString Util.readResource("/reference.conf")
+    val reference = ConfigFactory parseString FileSystemUtil.readResource("/reference.conf")
     val context = (cmd_line_param.context map ( ConfigFactory parseString _ )).getOrElse(empty_object)
     val config_file = (cmd_line_param.config map (Util readConfigFile)).getOrElse(empty_object)
     val code = (cmd_line_param.cmd filter { _ == "run" } map
@@ -58,11 +58,11 @@ class AppContext(cmd_line_param: AppSetting) {
   }
 
 
-  def checkpointFile = Util.joinPath(working_dir,Keywords.Config.CHECKPOINT_FILE)
+  def checkpointFile = FileSystemUtil.joinPath(working_dir,Keywords.Config.CHECKPOINT_FILE)
 
   protected[config] def readCheckpoint: mutable.Map[String,TaskStats] = {
     val checkpoints = mutable.Map[String,TaskStats]()
-    if (Util.fileExists(checkpointFile)) {
+    if (FileSystemUtil.fileExists(checkpointFile)) {
       AppLogger info s"checkpoint file $checkpointFile detected"
       Util.readConfigFile(checkpointFile).root() foreach {
         case (key,value: ConfigObject) => checkpoints += (key -> TaskStats(value.toConfig))
@@ -82,7 +82,7 @@ class AppContext(cmd_line_param: AppSetting) {
       }
     }
     if (!this.skip_checkpoints) {
-      Util.writeFile(content.root().render(ConfigRenderOptions.concise()), checkpointFile, append = false)
+      FileSystemUtil.writeFile(content.root().render(ConfigRenderOptions.concise()), checkpointFile, append = false)
     }
   }
 

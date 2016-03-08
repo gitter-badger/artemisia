@@ -1,4 +1,4 @@
-package org.ultron.logging
+package org.ultron.core
 
 /**
  * Created by chlr on 3/4/16.

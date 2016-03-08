@@ -1,10 +1,8 @@
 package org.ultron.task
 
 import com.typesafe.config.{ConfigFactory, Config}
-import org.ultron.config.Keywords
-import org.ultron.core.AppLogger
+import org.ultron.core.{LogSource, Keywords, AppLogger}
 import org.ultron.core.dag.Status
-import org.ultron.logging.LogSource
 import org.ultron.util.Util
 
 import scala.util.{Failure, Success, Try}

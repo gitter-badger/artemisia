@@ -1,8 +1,6 @@
 package org.ultron.core
 
 import org.slf4j.LoggerFactory
-import org.ultron.config.Keywords
-import org.ultron.logging.LogSource
 
 /**
  * Created by chlr on 1/10/16.

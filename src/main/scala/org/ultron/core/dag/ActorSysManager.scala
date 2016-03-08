@@ -3,8 +3,8 @@ package org.ultron.core.dag
 import akka.actor.{ActorRef, Props, ActorSystem}
 import akka.routing.BalancingPool
 import com.typesafe.config.{ConfigFactory, Config}
-import org.ultron.config.{Keywords, AppContext}
-import org.ultron.core.AppLogger
+import org.ultron.config.AppContext
+import org.ultron.core.{Keywords, AppLogger}
 
 /**
  * Created by chlr on 1/18/16.

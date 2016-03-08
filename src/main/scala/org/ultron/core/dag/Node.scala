@@ -2,8 +2,8 @@ package org.ultron.core.dag
 
 import com.typesafe.config.{Config, ConfigFactory}
 import net.ceedubs.ficus.Ficus._
-import org.ultron.config.{AppContext, Keywords}
-import org.ultron.core.{AppLogger, dag}
+import org.ultron.config.AppContext
+import org.ultron.core.{Keywords, AppLogger, dag}
 import org.ultron.task.{TaskConfig, TaskHandler}
 
 import scala.collection.LinearSeq
@@ -31,7 +31,7 @@ class Node(val name: String, var payload: Config) {
 
   def getNodeTask(app_context: AppContext): TaskHandler = {
     val component = app_context.componentMapper(payload.as[String](Keywords.Task.COMPONENT))
-    val task = component.dispatch(payload.as[String](Keywords.Task.TASK),payload.getConfig(Keywords.Task.PARAMS))
+    val task = component.dispatch(payload.as[String](Keywords.Task.TASK), name, payload.getConfig(Keywords.Task.PARAMS))
     new TaskHandler(TaskConfig(name,payload,app_context),task)
   }
 

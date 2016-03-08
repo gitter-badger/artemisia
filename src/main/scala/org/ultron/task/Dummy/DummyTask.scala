@@ -4,13 +4,15 @@ import com.typesafe.config.{Config, ConfigFactory}
 import net.ceedubs.ficus.Ficus._
 import org.ultron.core.AppLogger
 import org.ultron.task.Task
+import org.ultron.util.Util
+
 
 /**
  * Created by chlr on 1/9/16.
  */
 
 
-class DummyTask(val dummy_param1: Int , val dummy_param2: Boolean) extends Task {
+class DummyTask(name: String = Util.getUUID,val dummy_param1: Int , val dummy_param2: Boolean) extends Task(name) {
 
   override def setup(): Unit = {
     AppLogger info s"IN SETUP with $dummy_param1 and $dummy_param2"
@@ -39,8 +41,8 @@ object DummyTask {
     """.stripMargin
   }
 
-  def apply(input_config: Config) = {
+  def apply(name: String,input_config: Config) = {
     val config = input_config withFallback default_config
-    new DummyTask(config.as[Int]("dummy_param1"),config.as[Boolean]("dummy_param2"))
+    new DummyTask(name,config.as[Int]("dummy_param1"),config.as[Boolean]("dummy_param2"))
   }
 }

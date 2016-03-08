@@ -1,0 +1,48 @@
+package org.ultron.task.localhost
+
+import com.typesafe.config.ConfigRenderOptions
+import net.ceedubs.ficus.Ficus._
+import org.ultron.TestSpec
+
+/**
+ * Created by chlr on 3/6/16.
+ */
+class ScriptTaskSpec extends TestSpec {
+
+  "ScriptTask" must "must execute command and parse result" in {
+    val value = "foo" -> "bar"
+    val task = new ScriptTask(script = s"echo { ${value._1} = ${value._2} }",parse_output = true)
+    val result = task.execute
+    result.as[String](value._1) must be (value._2)
+  }
+
+  it must "throw an exception when script fails" in {
+    val exception = intercept[AssertionError] {
+      val value = "foo" -> "bar"
+      val task = new ScriptTask(script = s"echo1 { ${value._1} = ${value._2} }", parse_output = false)
+      task.execute
+    }
+    exception.getMessage must be ("assertion failed: Non Zero return code detected")
+  }
+
+  it must "apply environment variables correctly"  in {
+    val env = Map("foo" -> "bar")
+    val task = new ScriptTask(script = s"echo { key = $${foo} }", env = env, parse_output = true)
+    val result = task.execute
+    result.as[String]("key") must be(env("foo"))
+  }
+
+  it must "execute multi-line script correctly" in {
+    val cmd =
+      """
+        |echo {
+        |echo foo = bar
+        |echo }
+      """.stripMargin
+    val task = new ScriptTask(script = cmd,parse_output = true)
+    val result = task.execute
+    info(result.root().render(ConfigRenderOptions.concise()))
+    result.as[String]("foo") must be ("bar")
+  }
+
+}

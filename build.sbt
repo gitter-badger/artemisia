@@ -9,7 +9,7 @@ lazy val ultron = (project in file(".")).enablePlugins(JavaAppPackaging)
 ).dependsOn(commons % "compile->compile;test->test",localhost)
 
 lazy val localhost = (project in General.componentBase / "localhost").enablePlugins(JavaAppPackaging)
-  .settings(General.settings("localhost")).dependsOn(commons)
+  .settings(General.settings("localhost")).dependsOn(commons  % "compile->compile;test->test")
 
 lazy val commons = (project in General.subprojectBase / "commons").enablePlugins(JavaAppPackaging)
   .settings(General.settings("commons"))

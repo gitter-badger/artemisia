@@ -1,10 +1,12 @@
 package org.ultron.core
 
+import java.nio.file.Paths
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.joran.JoranConfigurator
 import org.slf4j.LoggerFactory
-import org.ultron.config.{AppContext, AppSetting, Keywords}
+import org.ultron.config.{AppContext, AppSetting}
 import org.ultron.core.dag.{ActorSysManager, Dag}
+import org.ultron.task.TaskContext
 
 /**
  * Created by chlr on 12/30/15.
@@ -40,6 +42,7 @@ object Command {
     AppLogger info "request for run command acknowledged"
     val app_context = prepareAppContext(cmd_line_params)
     AppLogger debug "context object created"
+    TaskContext.setWorkingDir(Paths.get(app_context.working_dir))
     val dag = Dag(app_context)
     AppLogger debug "starting Actor System"
     val actor_sys_manager =  new ActorSysManager(app_context)

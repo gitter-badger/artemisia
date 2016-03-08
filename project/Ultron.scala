@@ -8,4 +8,5 @@ object Ultron {
     "org.scalaz" %% "scalaz-core" % "7.2.0",
     "com.typesafe.akka" % "akka-testkit_2.11" % "2.4.1" % "test"
   )
+
 }

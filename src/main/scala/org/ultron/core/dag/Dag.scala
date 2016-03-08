@@ -2,8 +2,8 @@ package org.ultron.core.dag
 
 import com.typesafe.config.{Config, ConfigObject, ConfigValueType}
 import net.ceedubs.ficus.Ficus._
-import org.ultron.config.{AppContext, Keywords}
-import org.ultron.core.AppLogger
+import org.ultron.config.AppContext
+import org.ultron.core.{Keywords, AppLogger}
 import org.ultron.core.dag.Message.TaskStats
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._

@@ -2,7 +2,8 @@ package org.ultron.task
 
 import com.typesafe.config.{Config, ConfigFactory}
 import net.ceedubs.ficus.Ficus._
-import org.ultron.config.{AppContext, Keywords}
+import org.ultron.config.AppContext
+import org.ultron.core.Keywords
 
 import scala.concurrent.duration.FiniteDuration
 

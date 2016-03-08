@@ -3,8 +3,7 @@ package org.ultron.util
 import java.io.FileNotFoundException
 
 import org.ultron.TestSpec
-import org.ultron.config.Keywords
-import org.ultron.core.wire
+import org.ultron.core.{Keywords, wire}
 import scaldi.Injectable._
 
 /**

@@ -1,6 +1,6 @@
-package org.ultron.config
+package org.ultron.core
 
-import org.ultron.util.Util
+import org.ultron.util.FileSystemUtil
 
 /**
  * Created by chlr on 1/1/16.
@@ -16,7 +16,7 @@ object Keywords {
   object Config {
     val GLOBAL_FILE_REF_VAR = "ULTRONRC"
     val SETTINGS_SECTION = "__settings__"
-    val DEFUALT_GLOBAL_CONFIG_FILE = Util.joinPath(System.getProperty("user.home"), "ultronrc.conf")
+    val DEFUALT_GLOBAL_CONFIG_FILE = FileSystemUtil.joinPath(System.getProperty("user.home"), "ultronrc.conf")
     val CHECKPOINT_FILE = "checkpoint.conf"
   }
 
