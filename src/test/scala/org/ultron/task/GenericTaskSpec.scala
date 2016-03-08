@@ -14,7 +14,7 @@ class GenericTaskSpec extends TestSpec {
   "The Task" must "retry a failing task for configured number of times" in {
     val task_config = GenericTaskSpec.getDefaultTaskConfig
 
-    val fail_task = new Task {
+    val fail_task = new Task("testTask") {
       override def work(): Config = { ConfigFactory.empty() }
       override def setup(): Unit = { throw new Exception("fail") }
       override def teardown(): Unit = {}
@@ -30,7 +30,7 @@ class GenericTaskSpec extends TestSpec {
   it must "stop retrying if it succeeds before retry limit" in {
 
     val task_config = GenericTaskSpec.getDefaultTaskConfig
-     val succeed_on_2_attempt_task = new Task {
+     val succeed_on_2_attempt_task = new Task("testTask") {
        var attempts = 1
        override def setup(): Unit = {}
        override def work(): Config = { if (this.attempts == 1) {  attempts += 1 ; throw new Exception("") } else { ConfigFactory.empty() } }
@@ -43,7 +43,7 @@ class GenericTaskSpec extends TestSpec {
 
   it must "ignore failures in teardown phase" in {
     val task_config = GenericTaskSpec.getDefaultTaskConfig
-    val fail_on_teardown_task = new Task() {
+    val fail_on_teardown_task = new Task("testTask") {
       override def setup(): Unit = {}
       override def work(): Config = {  ConfigFactory.empty }
       override def teardown(): Unit = { throw new Exception("my own exception") }
@@ -55,7 +55,7 @@ class GenericTaskSpec extends TestSpec {
 
   it must "skip execution if the task_option flag is set" in {
     val task_config = TaskConfig(task_name = "test_task",retry_limit = 3, cooldown = 10 milliseconds, skip_execution = true)
-    val a_dummy_task = new Task {
+    val a_dummy_task = new Task("testTask") {
       override def setup(): Unit = { throw new Exception("my own exception") }
       override def work(): Config = {  throw new Exception("my own exception") }
       override def teardown(): Unit = { throw new Exception("my own exception") }

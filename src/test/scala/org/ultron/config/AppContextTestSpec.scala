@@ -7,7 +7,7 @@ import net.ceedubs.ficus.Ficus._
 import org.ultron.TestSpec
 import org.ultron.core.dag.Message.TaskStats
 import org.ultron.core.{Keywords, wire}
-import org.ultron.util.{OSUtil, OSUtilTestImpl, Util}
+import org.ultron.util.{FileSystemUtil, OSUtil, OSUtilTestImpl}
 import scaldi.Injectable._
 
 /**
@@ -87,7 +87,7 @@ class AppContextTestSpec extends TestSpec {
     val cmd = cmd_line_params.copy(working_dir = Some(test_working_dir))
     app_context = new AppContext(cmd)
     app_context.writeCheckpoint(task_name,AppContextTestSpec.getTaskStatsConfigObject)
-    val checkpoint = ConfigFactory.parseFile(new File(Util.joinPath(test_working_dir,"checkpoint.conf")))
+    val checkpoint = ConfigFactory.parseFile(new File(FileSystemUtil.joinPath(test_working_dir,"checkpoint.conf")))
     info("validating end_time")
     checkpoint.getString(s"$task_name.${Keywords.TaskStats.END_TIME}") must be ("2016-01-18 22:27:52")
     info("validating start_time")

@@ -1,6 +1,5 @@
 package org.ultron.task.localhost
 
-import com.typesafe.config.ConfigRenderOptions
 import net.ceedubs.ficus.Ficus._
 import org.ultron.TestSpec
 
@@ -41,7 +40,6 @@ class ScriptTaskSpec extends TestSpec {
       """.stripMargin
     val task = new ScriptTask(script = cmd,parse_output = true)
     val result = task.execute
-    info(result.root().render(ConfigRenderOptions.concise()))
     result.as[String]("foo") must be ("bar")
   }
 
