@@ -17,7 +17,7 @@ class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends
   def play: Receive = {
     case 'Play => {
       implicit val dispatcher = context.dispatcher
-      val heartbeat_interval = Duration(app_context.dag_setting.heartbeat_cycle.toMillis, TimeUnit.MILLISECONDS)
+      val heartbeat_interval = Duration(app_context.dagSetting.heartbeat_cycle.toMillis, TimeUnit.MILLISECONDS)
       AppLogger debug s"scheduling heartbeat messages for $heartbeat_interval"
       context.system.scheduler.schedule(0 seconds, heartbeat_interval, self, new Tick)
     }

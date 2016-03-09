@@ -19,7 +19,7 @@ class Node(val name: String, var payload: Config) {
   */
 
   private var status = Status.READY
-  val ignore_failure: Boolean = false
+  val ignoreFailure: Boolean = false
   var parents: LinearSeq[Node] = Nil
 
   def isRunnable = {
@@ -50,25 +50,25 @@ class Node(val name: String, var payload: Config) {
 
   def getStatus = status
 
-  def applyStatusFromCheckpoint(checkpoint_status: Status.Value): Unit = {
+  def applyStatusFromCheckpoint(checkpointStatus: Status.Value): Unit = {
     if (status == Status.SUCCEEDED || status == Status.SKIPPED) {
-      AppLogger info s"applying checkpoint status $checkpoint_status for node $name"
-      this.status = checkpoint_status
+      AppLogger info s"applying checkpoint status $checkpointStatus for node $name"
+      this.status = checkpointStatus
     }
-    checkpoint_status match {
+    checkpointStatus match {
       case Status.SUCCEEDED => {
-        AppLogger info s"marking node $name status as $checkpoint_status from checkpoint"
-        this.status = checkpoint_status
+        AppLogger info s"marking node $name status as $checkpointStatus from checkpoint"
+        this.status = checkpointStatus
       }
       case Status.SKIPPED => {
-        AppLogger info s"marking node $name status as $checkpoint_status from checkpoint"
-        this.status = checkpoint_status
+        AppLogger info s"marking node $name status as $checkpointStatus from checkpoint"
+        this.status = checkpointStatus
       }
       case Status.FAILED => {
         AppLogger info s"detected node $name from checkpoint has ${Status.FAILED}. setting node status as ${Status.READY}"
       }
       case _ => {
-        AppLogger warn s"node $name has an unhandled status of $checkpoint_status}. setting node status as ${Status.READY}"
+        AppLogger warn s"node $name has an unhandled status of $checkpointStatus}. setting node status as ${Status.READY}"
       }
     }
   }

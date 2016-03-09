@@ -9,13 +9,13 @@ object Main {
   var show_usage_on_error = true
   def main(args: Array[String]): Unit = {
     parseCmdLineArguments(args,show_usage_on_error) match {
-      case cmd_line_params @ AppSetting(Some("run"), Some(_), _, _, _, _,_) => Command.run(cmd_line_params)
-      case cmd_line_params @ AppSetting(Some("doc"), _, _, _, _, _,_) => Command.doc(cmd_line_params)
-      case cmd_line_params @ _ => throw new IllegalArgumentException("--help to see supported options")
+      case cmdLineParams @ AppSetting(Some("run"), Some(_), _, _, _, _,_) => Command.run(cmdLineParams)
+      case cmdLineParams @ AppSetting(Some("doc"), _, _, _, _, _,_) => Command.doc(cmdLineParams)
+      case cmdLineParams @ _ => throw new IllegalArgumentException("--help to see supported options")
     }
   }
 
-  private[core] def parseCmdLineArguments(args: Array[String],show_usage_on_error: Boolean = true): AppSetting = {
+  private[core] def parseCmdLineArguments(args: Array[String],usageOnError: Boolean = true): AppSetting = {
 
     val parser = new OptionParser[AppSetting]("ultron") {
       this.
@@ -32,7 +32,7 @@ object Main {
       opt[String]('c', "config") action { (x, c) => c.copy(config = Some(x)) } text "configuration file"
       opt[String]('w', "workflow_id") action { (x, c) => c.copy(run_id = Some(x)) } text "workflow_id for execution"
 
-      override def showUsageOnError = show_usage_on_error
+      override def showUsageOnError = usageOnError
 
       override def errorOnUnknownArgument = true
     }

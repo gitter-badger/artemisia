@@ -12,16 +12,16 @@ import scala.util.{Failure, Success, Try}
  * Created by chlr on 1/7/16.
  */
 
-class TaskHandler(val task_metadata: TaskConfig, val task: Task) {
+class TaskHandler(val taskMetadata: TaskConfig, val task: Task) {
 
-  task.setLogSource(LogSource(task_metadata.task_name))
+  task.setLogSource(LogSource(taskMetadata.taskName))
   private var attempts = 0
   private var status: Status.Value = Status.UNKNOWN
 
   final def execute(): Try[Config] = {
-    if(!task_metadata.skip_execution) {
-      AppLogger info s"running task with total allowed attempts of ${task_metadata.retry_limit}"
-      val result = run(max_attempts = task_metadata.retry_limit) {
+    if(!taskMetadata.skipExecution) {
+      AppLogger info s"running task with total allowed attempts of ${taskMetadata.retryLimit}"
+      val result = run(maxAttempts = taskMetadata.retryLimit) {
           AppLogger debug "executing setup phase of the task"
           task.setup()
           AppLogger debug "executing work phase of the task"
@@ -35,13 +35,13 @@ class TaskHandler(val task_metadata: TaskConfig, val task: Task) {
       }
       result
     } else {
-      AppLogger info s"skipping execution of ${task_metadata.task_name}. ${Keywords.Task.SKIP_EXECUTION} flag is set"
+      AppLogger info s"skipping execution of ${taskMetadata.taskName}. ${Keywords.Task.SKIP_EXECUTION} flag is set"
       status = Status.SKIPPED
       Success(ConfigFactory.empty())
     }
   }
 
-  private def run(max_attempts: Int)(body : => Config) : Try[Config] = {
+  private def run(maxAttempts: Int)(body : => Config) : Try[Config] = {
     try {
       attempts += 1
       val result = body
@@ -49,11 +49,11 @@ class TaskHandler(val task_metadata: TaskConfig, val task: Task) {
       Success(result)
     } catch {
       case ex: Throwable => {
-        AppLogger info s"attempt ${task_metadata.retry_limit - max_attempts + 1} for task ${task_metadata.task_name}"
+        AppLogger info s"attempt ${taskMetadata.retryLimit - maxAttempts + 1} for task ${taskMetadata.taskName}"
         AppLogger error Util.printStackTrace(ex)
-        if (max_attempts > 1) {
+        if (maxAttempts > 1) {
 
-          run(max_attempts -1)(body)
+          run(maxAttempts -1)(body)
         }
         else {
           status = Status.FAILED

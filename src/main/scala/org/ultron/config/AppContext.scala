@@ -27,15 +27,15 @@ class AppContext(cmd_line_param: AppSetting) {
   private[config] case class Logging(console_trace_level: String, file_trace_level: String)
   
 
-  val skip_checkpoints = cmd_line_param.skip_checkpoints
-  val global_config_file = Util.getGlobalConfigFileLocation()
+  val skipCheckpoints = cmd_line_param.skip_checkpoints
+  val globalConfigFile = Util.getGlobalConfigFileLocation()
   var payload = getConfigObject(cmd_line_param)
   val logging: Logging = payload.as[Logging]("__setting__.logging")
-  val dag_setting: DagSetting = payload.as[DagSetting]("__setting__.dag")
-  val core_setting: CoreSetting = payload.as[CoreSetting]("__setting__.core")
-  val run_id: String = cmd_line_param.run_id.getOrElse(Util.getUUID)
-  val working_dir: String = cmd_line_param.working_dir.getOrElse(FileSystemUtil.joinPath(payload.getString("__setting__.core.working_dir"),run_id))
-  val checkpoints: mutable.Map[String,TaskStats] = if (skip_checkpoints) mutable.Map() else readCheckpoint
+  val dagSetting: DagSetting = payload.as[DagSetting]("__setting__.dag")
+  val coreSetting: CoreSetting = payload.as[CoreSetting]("__setting__.core")
+  val runId: String = cmd_line_param.run_id.getOrElse(Util.getUUID)
+  val workingDir: String = cmd_line_param.working_dir.getOrElse(FileSystemUtil.joinPath(payload.getString("__setting__.core.working_dir"),runId))
+  val checkpoints: mutable.Map[String,TaskStats] = if (skipCheckpoints) mutable.Map() else readCheckpoint
   val componentMapper: Map[String,Component] = payload.as[Map[String,String]]("__setting__.components") map {
     case (name,component) => { (name, Class.forName(component).getConstructor().newInstance().asInstanceOf[Component] ) }
   }
@@ -47,7 +47,7 @@ class AppContext(cmd_line_param: AppSetting) {
     val config_file = (cmd_line_param.config map (Util readConfigFile)).getOrElse(empty_object)
     val code = (cmd_line_param.cmd filter { _ == "run" } map
       { x => Util.readConfigFile(cmd_line_param.value.get) }).getOrElse(empty_object)
-    val global_config_option = (global_config_file map { Util readConfigFile}).getOrElse(empty_object)
+    val global_config_option = (globalConfigFile map { Util readConfigFile}).getOrElse(empty_object)
     context withFallback config_file withFallback code withFallback global_config_option withFallback reference
   }
 
@@ -58,7 +58,7 @@ class AppContext(cmd_line_param: AppSetting) {
   }
 
 
-  def checkpointFile = FileSystemUtil.joinPath(working_dir,Keywords.Config.CHECKPOINT_FILE)
+  def checkpointFile = FileSystemUtil.joinPath(workingDir,Keywords.Config.CHECKPOINT_FILE)
 
   protected[config] def readCheckpoint: mutable.Map[String,TaskStats] = {
     val checkpoints = mutable.Map[String,TaskStats]()
@@ -74,14 +74,14 @@ class AppContext(cmd_line_param: AppSetting) {
   def writeCheckpoint(task_name: String, task_stats: TaskStats): Unit = {
 
     checkpoints += (task_name -> task_stats)
-    payload = task_stats.task_output withFallback payload
+    payload = task_stats.taskOutput withFallback payload
 
     val content = checkpoints.foldLeft(ConfigFactory.empty()) {
         (cp_config: Config, cp: (String, TaskStats)) => {
         ConfigFactory.parseString(cp._2.toConfig(cp._1).root().render(ConfigRenderOptions.concise())) withFallback cp_config
       }
     }
-    if (!this.skip_checkpoints) {
+    if (!this.skipCheckpoints) {
       FileSystemUtil.writeFile(content.root().render(ConfigRenderOptions.concise()), checkpointFile, append = false)
     }
   }

@@ -98,7 +98,7 @@ private[dag] class Dag(node_list: LinearSeq[Node], checkpoints: mutable.Map[Stri
     graph filter {_.getStatus == status}
   }
 
-  override def toString = graph.toString()
+  override def toString() = graph.toString()
 
   override def iterator: Iterator[LinearSeq[Node]] = new Iterator[LinearSeq[Node]] {
 

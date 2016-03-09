@@ -23,7 +23,7 @@ class ActorSysManager(app_context: AppContext) {
          |  thread-pool-executor {
          |    core-pool-size-min = 3
          |    core-pool-size-factor = 3.0
-         |    core-pool-size-max = ${ math.ceil(app_context.dag_setting.concurrency * 1.5) }
+         |    core-pool-size-max = ${ math.ceil(app_context.dagSetting.concurrency * 1.5) }
           |  }
           |  throughput = 1
           |}
@@ -34,8 +34,8 @@ class ActorSysManager(app_context: AppContext) {
   }
 
   def createWorker(dispatcher: String = "akka.actor.default-dispatcher") = {
-    AppLogger debug s"creating worker pool with ${app_context.dag_setting.concurrency} worker(s)"
-     system.actorOf(BalancingPool(app_context.dag_setting.concurrency).props(Props[Worker])
+    AppLogger debug s"creating worker pool with ${app_context.dagSetting.concurrency} worker(s)"
+     system.actorOf(BalancingPool(app_context.dagSetting.concurrency).props(Props[Worker])
       .withDispatcher(dispatcher), "router")
   }
 

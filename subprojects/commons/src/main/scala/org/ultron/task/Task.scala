@@ -31,7 +31,7 @@ abstract class Task(val task_name: String) {
   }
 
   protected def getFileHandle(file_name: String) = {
-    new File(FileSystemUtil.joinPath(TaskContext.getWorkingDir.toString,task_name),file_name)
+    new File(FileSystemUtil.joinPath(TaskContext.workingDir.toString,task_name),file_name)
   }
 
   protected def readFile(file_name: String) = {

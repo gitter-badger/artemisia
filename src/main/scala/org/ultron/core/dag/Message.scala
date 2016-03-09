@@ -24,11 +24,11 @@ object Message {
 
 
   case class TaskStats  (
-                        start_time: String,
-                        end_time: String = null,
+                        startTime: String,
+                        endTime: String = null,
                         status: Status.Value,
                         attempts: Int = 1,
-                        task_output: Config = ConfigFactory.empty()
+                        taskOutput: Config = ConfigFactory.empty()
                         ) extends Messageable {
 
     def toConfig(task_name: String) = {
@@ -36,11 +36,11 @@ object Message {
       ConfigFactory parseString {
         s"""
           |$task_name = {
-          |  ${Keywords.TaskStats.START_TIME} = "$start_time"
-          |  ${Keywords.TaskStats.END_TIME} = "$end_time"
+          |  ${Keywords.TaskStats.START_TIME} = "$startTime"
+          |  ${Keywords.TaskStats.END_TIME} = "$endTime"
           |  ${Keywords.TaskStats.STATUS} = $status
           |  ${Keywords.TaskStats.ATTEMPT} = $attempts
-          |  ${Keywords.TaskStats.TASK_OUTPUT} = ${task_output.root().render(ConfigRenderOptions.concise())}
+          |  ${Keywords.TaskStats.TASK_OUTPUT} = ${taskOutput.root().render(ConfigRenderOptions.concise())}
           |}
         """.stripMargin
       }

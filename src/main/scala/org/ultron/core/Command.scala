@@ -14,14 +14,14 @@ import org.ultron.task.TaskContext
 object Command {
 
   private def prepareAppContext(cmd_line_params: AppSetting) = {
-    val app_context = new AppContext(cmd_line_params)
-    configureLogging(app_context)
-    AppLogger debug s"workflow_id: ${app_context.run_id}"
-    AppLogger debug s"working directory: ${app_context.working_dir}"
-    if (app_context.global_config_file.nonEmpty) {
-      AppLogger debug s"global config file: ${app_context.global_config_file.get}"
+    val appContext = new AppContext(cmd_line_params)
+    configureLogging(appContext)
+    AppLogger debug s"workflow_id: ${appContext.runId}"
+    AppLogger debug s"working directory: ${appContext.workingDir}"
+    if (appContext.globalConfigFile.nonEmpty) {
+      AppLogger debug s"global config file: ${appContext.globalConfigFile.get}"
     }
-    app_context
+    appContext
   }
 
 
@@ -32,8 +32,8 @@ object Command {
       context.reset()
       context.putProperty("log.console.level", app_context.logging.console_trace_level)
       context.putProperty("log.file.level", app_context.logging.file_trace_level)
-      context.putProperty("env.working_dir", app_context.core_setting.working_dir)
-      context.putProperty("workflow_id", app_context.run_id)
+      context.putProperty("env.working_dir", app_context.coreSetting.working_dir)
+      context.putProperty("workflow_id", app_context.runId)
       jc.doConfigure(this.getClass.getResourceAsStream("/logback_config.xml"))
   }
 
@@ -42,7 +42,7 @@ object Command {
     AppLogger info "request for run command acknowledged"
     val app_context = prepareAppContext(cmd_line_params)
     AppLogger debug "context object created"
-    TaskContext.setWorkingDir(Paths.get(app_context.working_dir))
+    TaskContext.setworkingDir(Paths.get(app_context.workingDir))
     val dag = Dag(app_context)
     AppLogger debug "starting Actor System"
     val actor_sys_manager =  new ActorSysManager(app_context)

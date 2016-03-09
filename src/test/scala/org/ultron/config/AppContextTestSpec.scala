@@ -104,9 +104,9 @@ class AppContextTestSpec extends TestSpec {
     val checkpoints = app_context.readCheckpoint
     val task_stats = checkpoints(task_name)
     info("validating end_time")
-    task_stats.end_time must be ("2016-01-18 22:27:52")
+    task_stats.endTime must be ("2016-01-18 22:27:52")
     info("validating start_time")
-    task_stats.start_time must be ("2016-01-18 22:27:51")
+    task_stats.startTime must be ("2016-01-18 22:27:51")
   }
 
 

@@ -15,29 +15,30 @@ import scala.concurrent.duration.FiniteDuration
 /*
 TaskConfig requires task_name param because the generic Task node requires task_name variable which will be used in logging.
  */
-case class TaskConfig(task_name: String = null,retry_limit : Int, cooldown: FiniteDuration, skip_execution: Boolean = false, ignore_failure: Boolean = false) {
+case class TaskConfig(taskName: String = null,retryLimit : Int, cooldown: FiniteDuration, skipExecution: Boolean = false, ignoreFailure: Boolean = false) {
 
 }
 
 object TaskConfig {
 
-  def apply(task_name: String,input_config: Config, app_context: AppContext): TaskConfig = {
+  def apply(taskName: String, inputConfig: Config, appContext: AppContext): TaskConfig = {
 
     val default_config = ConfigFactory parseString {
       s"""
-         |${Keywords.Task.IGNORE_ERROR} = ${app_context.dag_setting.ignore_conditions}
-         |${Keywords.Task.ATTEMPT} = ${app_context.dag_setting.attempts}
+         |${Keywords.Task.IGNORE_ERROR} = ${appContext.dagSetting.ignore_conditions}
+         |${Keywords.Task.ATTEMPT} = ${appContext.dagSetting.attempts}
          |${Keywords.Task.SKIP_EXECUTION} = false
-         |${Keywords.Task.COOLDOWN} = ${app_context.dag_setting.cooldown}
+         |${Keywords.Task.COOLDOWN} = ${appContext.dagSetting.cooldown}
          |__context__ = {}
     """.stripMargin
     }
 
 
-    val config = input_config withFallback default_config
-    TaskConfig(task_name,config.as[Int](Keywords.Task.ATTEMPT),
+    val config = inputConfig withFallback default_config
+    TaskConfig(taskName,config.as[Int](Keywords.Task.ATTEMPT),
       config.as[FiniteDuration](Keywords.Task.COOLDOWN),
       config.as[Boolean](Keywords.Task.SKIP_EXECUTION),
       config.as[Boolean](Keywords.Task.IGNORE_ERROR))
   }
+
 }

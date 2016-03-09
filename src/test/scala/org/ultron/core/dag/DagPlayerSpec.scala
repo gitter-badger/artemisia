@@ -45,7 +45,7 @@ class DagPlayerSpec extends ActorTestSpec {
     probe.validateAndRelay(dag_player) {
       case TaskSuceeded("step1", stats: TaskStats) => {
         stats.status must be(Status.SUCCEEDED)
-        stats.task_output.as[Int]("tango") must be (30)
+        stats.taskOutput.as[Int]("tango") must be (30)
       }
     }
 
@@ -83,7 +83,7 @@ class DagPlayerSpec extends ActorTestSpec {
     probe.validateAndRelay(dag_player) {
       case TaskSuceeded("step1", stats: TaskStats) => {
         stats.status must be(Status.SUCCEEDED)
-        stats.task_output.as[Int]("tango") must be (20)
+        stats.taskOutput.as[Int]("tango") must be (20)
       }
     }
 
