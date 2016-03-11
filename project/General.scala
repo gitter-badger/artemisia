@@ -16,7 +16,8 @@ object General {
     "org.slf4j" % "slf4j-nop" % "1.7.6" % "test",
     "org.scalatest" %% "scalatest" % "2.2.4" % "test",
     "org.pegdown" % "pegdown" % "1.0.2" % "test",
-    "joda-time" % "joda-time" % "2.0"
+    "joda-time" % "joda-time" % "2.0",
+    "com.typesafe" % "config" % "1.3.0"
   )
   val crossVersions =  Seq("2.10.4", "2.11.6")
 
