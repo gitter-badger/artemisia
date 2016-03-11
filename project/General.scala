@@ -29,7 +29,8 @@ object General {
     crossScalaVersions := General.crossVersions,
     (dependencyClasspath in Test) <<= (dependencyClasspath in Test) map {
       _.filterNot(_.data.name.contains("logback-classic"))
-    }
+    },
+    resolvers += Resolver.jcenterRepo
   )
 
 }
