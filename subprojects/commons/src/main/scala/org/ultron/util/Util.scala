@@ -6,26 +6,39 @@ import java.nio.file.{Files, Paths}
 import com.typesafe.config.{Config, ConfigFactory}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.slf4j.LoggerFactory
-import org.ultron.core.{Keywords, AppLogger, wire}
+import org.ultron.core.{AppLogger, Keywords, wire}
 import scaldi.Injectable._
 
 /**
  * Created by chlr on 11/29/15.
  */
+
+
+/**
+ * an object with utility functions.
+ *
+ */
 object Util {
 
-  val logger = LoggerFactory.getLogger(this.getClass)
-
-  def getGlobalConfigFileLocation(default_file: String = Keywords.Config.DEFUALT_GLOBAL_CONFIG_FILE): Option[String] = {
+  /**
+   * 
+   * @param globalConfigFilePath Global config file path
+   * @return parsed Config object of the global config file
+   */
+  def getGlobalConfigFileLocation(globalConfigFilePath: String = Keywords.Config.DEFUALT_GLOBAL_CONFIG_FILE): Option[String] = {
     val os_util = inject[OSUtil]
     val result = os_util.getSystemVariable(Keywords.Config.GLOBAL_FILE_REF_VAR)
     val global_config = if ( result.isEmpty )
-        if (Files exists Paths.get(default_file)) Some(default_file) else None
+        if (Files exists Paths.get(globalConfigFilePath)) Some(globalConfigFilePath) else None
     else result
     global_config
   }
 
+  /**
+   *
+   * @param path path of the HOCON file to be read
+   * @return parsed Config object of the file
+   */
   def readConfigFile(path: String): Config = {
     if(!Files.exists(Paths.get(path))) {
       AppLogger error s"requested config file $path not found"
@@ -34,10 +47,22 @@ object Util {
     ConfigFactory.parseFile(new File(path))
   }
 
+
+  /**
+   * generates a UUID
+   *
+   * @return UUID
+   */
   def getUUID = {
     java.util.UUID.randomUUID.toString
   }
 
+  /**
+   * prints stacktrace of an Exception
+   *
+   * @param ex Throwable object to be print
+   * @return string of the stacktrace
+   */
   def printStackTrace(ex: Throwable) = {
     val sw = new StringWriter()
     val pw = new PrintWriter(sw)
@@ -45,6 +70,10 @@ object Util {
     sw.toString
   }
 
+  /**
+   **
+   * @return current time in format "yyyy-MM-dd HH:mm:ss"
+   */
   def currentTime : String = {
       val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
       formatter.print(new DateTime())

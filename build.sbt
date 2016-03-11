@@ -1,4 +1,7 @@
 import sbt.Keys._
+import UnidocKeys._
+import com.typesafe.sbt.SbtGit.GitKeys._
+
 
 assemblySettings
 
@@ -17,6 +20,13 @@ lazy val commons = (project in General.subprojectBase / "commons").enablePlugins
 
 
 lazy val all = project.aggregate(ultron, localhost, commons).enablePlugins(JavaAppPackaging)
+  .settings(unidocSettings)
+  .settings(site.settings ++ ghpages.settings: _*)
+  .settings(
+    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(ultron),
+    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
+    gitRemoteRepo := "git@github.com:mig-foxbat/ultron.git"
+  )
 
 
 
