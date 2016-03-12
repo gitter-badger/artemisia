@@ -10,7 +10,7 @@ object General {
   val dependencies = Seq (
     "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
     "ch.qos.logback" % "logback-classic" % "0.9.28",
-    "com.iheart" %% "ficus" % "1.2.0",
+    "com.iheart" %% "ficus" % "1.1.3",
     "ch.qos.logback" % "logback-classic" % "0.9.28" % "runtime",
     "org.slf4j" % "slf4j-api" % "1.7.6" % "provided",
     "org.slf4j" % "slf4j-nop" % "1.7.6" % "test",
@@ -29,8 +29,7 @@ object General {
     crossScalaVersions := General.crossVersions,
     (dependencyClasspath in Test) <<= (dependencyClasspath in Test) map {
       _.filterNot(_.data.name.contains("logback-classic"))
-    },
-    resolvers += Resolver.jcenterRepo
+    }
   )
 
 }
