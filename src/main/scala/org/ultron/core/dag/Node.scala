@@ -1,7 +1,7 @@
 package org.ultron.core.dag
 
 import com.typesafe.config.{Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.config.AppContext
 import org.ultron.core.{Keywords, AppLogger, dag}
 import org.ultron.task.{TaskConfig, TaskHandler}

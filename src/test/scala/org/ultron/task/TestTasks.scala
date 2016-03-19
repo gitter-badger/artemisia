@@ -1,7 +1,7 @@
 package org.ultron.task
 
 import com.typesafe.config.{Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 
 /**
  * Created by chlr on 1/26/16.

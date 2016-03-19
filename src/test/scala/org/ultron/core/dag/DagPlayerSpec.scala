@@ -3,7 +3,7 @@ package org.ultron.core.dag
 import akka.actor.{ActorSystem, ActorRef, Props}
 import akka.routing.BalancingPool
 import akka.testkit.TestProbe
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.ActorTestSpec
 import org.ultron.config.{AppContext, AppSetting}
 import org.ultron.core.dag.Message._

@@ -1,7 +1,7 @@
 package org.ultron.task.dummy
 
 import com.typesafe.config.{Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.core.AppLogger
 import org.ultron.task.Task
 import org.ultron.util.Util

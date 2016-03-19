@@ -1,7 +1,7 @@
 package org.ultron.core.dag
 
 import com.typesafe.config.{ConfigRenderOptions, Config, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.core.Keywords
 import org.ultron.task.TaskHandler
 
@@ -10,7 +10,7 @@ import org.ultron.task.TaskHandler
  */
 object Message {
 
-  trait Messageable
+  sealed trait Messageable
 
   class Tick extends Messageable
 

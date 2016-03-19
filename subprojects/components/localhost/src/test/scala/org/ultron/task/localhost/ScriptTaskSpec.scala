@@ -1,7 +1,7 @@
 package org.ultron.task.localhost
 
-import net.ceedubs.ficus.Ficus._
 import org.ultron.TestSpec
+import org.ultron.util.HoconConfigUtil.Handler
 
 /**
  * Created by chlr on 3/6/16.

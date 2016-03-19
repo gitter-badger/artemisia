@@ -3,7 +3,7 @@ package org.ultron.config
 import java.io.{File, FileNotFoundException}
 
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
-import net.ceedubs.ficus.Ficus._
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.TestSpec
 import org.ultron.core.dag.Message.TaskStats
 import org.ultron.core.{Keywords, wire}
