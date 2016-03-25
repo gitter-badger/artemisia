@@ -30,6 +30,7 @@ object General {
       _.filterNot(_.data.name.contains("logback-classic"))
     },
     resolvers += Resolver.jcenterRepo
+
   )
 
 }

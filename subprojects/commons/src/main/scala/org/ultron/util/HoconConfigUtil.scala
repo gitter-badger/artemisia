@@ -11,22 +11,21 @@ object HoconConfigUtil {
 
   implicit class Handler(val config: Config) {
 
-    def as[T](key: String)(implicit configReader: ConfigReader[T]): T = {
+    def as[T: ConfigReader](key: String): T = {
       implicitly[ConfigReader[T]].read(config, key)
     }
 
-    def asMap[T](key: String)(implicit configReader: ConfigReader[T]): Map[String,T] = {
+    def asMap[T: ConfigReader](key: String): Map[String,T] = {
       val configObject = config.getConfig(key).root()
       val result = configObject.keySet().asScala map { x => x -> configObject.toConfig.as[T](x) }
       result.toMap
     }
 
-    def getAs[T](key: String)(implicit configReader: ConfigReader[T]): Option[T] = {
+    def getAs[T: ConfigReader](key: String): Option[T] = {
       if (config.hasPath(key)) Some(as[T](key)) else None
     }
 
   }
-
 
 
   trait ConfigReader[T] {

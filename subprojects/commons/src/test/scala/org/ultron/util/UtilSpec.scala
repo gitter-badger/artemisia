@@ -3,18 +3,18 @@ package org.ultron.util
 import java.io.FileNotFoundException
 
 import org.ultron.TestSpec
-import org.ultron.core.{Keywords, wire}
-import scaldi.Injectable._
+import org.ultron.core.{Keywords, TestEnv, env}
+
 
 /**
  * Created by chlr on 1/1/16.
  */
 
 class UtilSpec extends TestSpec {
-  val os_util = inject[OSUtil].asInstanceOf[OSUtilTestImpl]
-  override def beforeEach() = {
 
-  }
+  val testEnv = new TestEnv
+  env = testEnv
+  val os_util: testEnv.TestOsUtil = env.osUtil.asInstanceOf[testEnv.TestOsUtil]
 
   "The Util.readConfigFile" must "throw FileNotFoundException on non-existent file" in {
     intercept[FileNotFoundException] {

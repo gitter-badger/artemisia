@@ -6,8 +6,7 @@ import java.nio.file.{Files, Paths}
 import com.typesafe.config.{Config, ConfigFactory}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.ultron.core.{AppLogger, Keywords, wire}
-import scaldi.Injectable._
+import org.ultron.core.{AppLogger, Keywords, env}
 
 /**
  * Created by chlr on 11/29/15.
@@ -26,7 +25,7 @@ object Util {
    * @return parsed Config object of the global config file
    */
   def getGlobalConfigFileLocation(globalConfigFilePath: String = Keywords.Config.DEFUALT_GLOBAL_CONFIG_FILE): Option[String] = {
-    val os_util = inject[OSUtil]
+    val os_util = env.osUtil
     val result = os_util.getSystemVariable(Keywords.Config.GLOBAL_FILE_REF_VAR)
     val global_config = if ( result.isEmpty )
         if (Files exists Paths.get(globalConfigFilePath)) Some(globalConfigFilePath) else None

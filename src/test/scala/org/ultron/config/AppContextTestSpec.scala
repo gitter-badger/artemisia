@@ -6,9 +6,9 @@ import com.typesafe.config.{Config, ConfigException, ConfigFactory}
 import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.TestSpec
 import org.ultron.core.dag.Message.TaskStats
-import org.ultron.core.{Keywords, wire}
-import org.ultron.util.{FileSystemUtil, OSUtil, OSUtilTestImpl}
-import scaldi.Injectable._
+import org.ultron.core.{env,TestEnv,Keywords}
+import org.ultron.util.FileSystemUtil
+
 
 /**
 *  Created by chlr on 12/4/15.
@@ -16,12 +16,15 @@ import scaldi.Injectable._
 class AppContextTestSpec extends TestSpec {
 
   var cmd_line_params: AppSetting = _
-  var os_util: OSUtilTestImpl = _
   var sys_var:(String,String) = _
   var app_context: AppContext = _
+  val testEnv = new TestEnv
+  env = testEnv
+  var os_util: testEnv.TestOsUtil = _
+
 
   override def beforeEach(): Unit = {
-    os_util  = inject[OSUtil].asInstanceOf[OSUtilTestImpl]
+    os_util  = env.osUtil.asInstanceOf[testEnv.TestOsUtil]
     sys_var = Keywords.Config.GLOBAL_FILE_REF_VAR -> this.getClass.getResource("/global_config.conf").getFile
     cmd_line_params = AppContextTestSpec.defualtTestCmdLineParams
   }
