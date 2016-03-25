@@ -8,7 +8,6 @@ object General {
   val subprojectBase = file("subprojects")
   val componentBase = subprojectBase / "components"
   val dependencies = Seq (
-    "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
     "ch.qos.logback" % "logback-classic" % "0.9.28",
     "ch.qos.logback" % "logback-classic" % "0.9.28" % "runtime",
     "org.slf4j" % "slf4j-api" % "1.7.6" % "provided",
