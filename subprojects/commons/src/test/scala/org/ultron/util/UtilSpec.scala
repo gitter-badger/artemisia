@@ -3,7 +3,7 @@ package org.ultron.util
 import java.io.FileNotFoundException
 
 import org.ultron.TestSpec
-import org.ultron.core.{Keywords, TestEnv, env}
+import org.ultron.core.{Keywords, env}
 
 
 /**
@@ -12,9 +12,12 @@ import org.ultron.core.{Keywords, TestEnv, env}
 
 class UtilSpec extends TestSpec {
 
-  val testEnv = new TestEnv
-  env = testEnv
-  val os_util: testEnv.TestOsUtil = env.osUtil.asInstanceOf[testEnv.TestOsUtil]
+  var os_util: testEnv.TestOsUtil = _
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    os_util = env.osUtil.asInstanceOf[testEnv.TestOsUtil]
+  }
 
   "The Util.readConfigFile" must "throw FileNotFoundException on non-existent file" in {
     intercept[FileNotFoundException] {
@@ -30,7 +33,7 @@ class UtilSpec extends TestSpec {
   }
 
   it must s"must give a None if ${Keywords.Config.GLOBAL_FILE_REF_VAR} not set and the default file doesn't exist" in {
-    os_util.withSysVar(Map()) {
+    os_util.withSysVar(Map("foo2" -> "baz2")) {
       val default_value = "A_Non_Existant_File.conf"
       Util.getGlobalConfigFileLocation(default_value) must equal(None)
     }

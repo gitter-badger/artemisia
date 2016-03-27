@@ -7,13 +7,14 @@ import scala.collection.mutable
 /**
  * Created by chlr on 3/24/16.
  */
-class TestEnv extends Env {
+
+object TestEnv extends Env {
 
   override val osUtil: OSUtil = new TestOsUtil
 
   class TestOsUtil extends OSUtil {
 
-    private[this] val systemVariableMap: mutable.Map[String,String] = mutable.Map()
+    private[this] val systemVariableMap: mutable.Map[String,String] = mutable.Map("foo" -> "bar")
     private[this] val systemPropertiesMap: mutable.Map[String,String] = mutable.Map("user.home" -> System.getProperty("user.home"))
     private[this] val lock :Lock = new ReentrantLock()
 

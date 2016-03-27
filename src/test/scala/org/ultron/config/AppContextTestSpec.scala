@@ -3,11 +3,11 @@ package org.ultron.config
 import java.io.{File, FileNotFoundException}
 
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
-import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.TestSpec
 import org.ultron.core.dag.Message.TaskStats
-import org.ultron.core.{env,TestEnv,Keywords}
+import org.ultron.core.{Keywords, env}
 import org.ultron.util.FileSystemUtil
+import org.ultron.util.HoconConfigUtil.Handler
 
 
 /**
@@ -18,8 +18,6 @@ class AppContextTestSpec extends TestSpec {
   var cmd_line_params: AppSetting = _
   var sys_var:(String,String) = _
   var app_context: AppContext = _
-  val testEnv = new TestEnv
-  env = testEnv
   var os_util: testEnv.TestOsUtil = _
 
 
@@ -63,7 +61,7 @@ class AppContextTestSpec extends TestSpec {
   it must "throw an FileNotFoundException when the config file doesn't exist" in  {
 
     os_util.withSysVar(Map(sys_var)) {
-      val config_file = "/not_exists_file"
+      val config_file = "/not_exists_file1"
       cmd_line_params = cmd_line_params.copy(config = Some(config_file))
       info("intercepting exception")
       val ex = intercept[FileNotFoundException] {
