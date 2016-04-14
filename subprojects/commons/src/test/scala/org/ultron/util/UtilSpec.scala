@@ -1,7 +1,6 @@
 package org.ultron.util
 
 import java.io.FileNotFoundException
-
 import org.ultron.TestSpec
 import org.ultron.core.{Keywords, env}
 
