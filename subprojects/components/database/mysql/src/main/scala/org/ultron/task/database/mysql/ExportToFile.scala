@@ -1,14 +1,14 @@
 package org.ultron.task.database.mysql
 
-import com.typesafe.config.Config
+import com.typesafe.config.{ConfigFactory, Config}
 import org.ultron.task.Task
-import org.ultron.util.db.{ConnectionProfile, ExportSettings}
-
+import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSettings}
 /**
  * Created by chlr on 4/13/16.
  */
-class SQLExport(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSettings)
+class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSettings)
   extends Task(name: String) {
+
 
   /**
    * override this to implement the setup phase
@@ -17,9 +17,7 @@ class SQLExport(name: String, sql: String, connectionProfile: ConnectionProfile 
    * - creating database connections
    * - generating relevant files
    */
-  override protected[task] def setup(): Unit = {
-
-  }
+  override protected[task] def setup(): Unit = {}
 
   /**
    * override this to implemet the work phase
@@ -30,14 +28,20 @@ class SQLExport(name: String, sql: String, connectionProfile: ConnectionProfile 
    *
    * @return any output of the work phase be encoded as a HOCON Config object.
    */
-  override protected[task] def work(): Config = ???
+  override protected[task] def work(): Config = {
+    val dbInterface  = env.dbInterface(connectionProfile)
+    val rs = dbInterface.query(sql)
+    DBUtil.exportCursorToFile(rs,exportSettings)
+    ConfigFactory.empty()
+  }
 
   /**
    * override this to implement the teardown phase
    *
    * this is where you deallocate any resource you have acquired in setup phase.
    */
-  override protected[task] def teardown(): Unit = ???
+  override protected[task] def teardown(): Unit = {}
+
 
 }
 

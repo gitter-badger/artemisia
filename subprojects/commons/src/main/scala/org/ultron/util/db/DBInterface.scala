@@ -1,10 +1,6 @@
 package org.ultron.util.db
 
-import java.sql.ResultSet
-
-import au.com.bytecode.opencsv.CSVWriter
-
-import scala.collection.convert.wrapAsJava
+import java.sql.{Connection, ResultSet}
 
 
 /**
@@ -14,10 +10,7 @@ import scala.collection.convert.wrapAsJava
 
 trait DBInterface {
 
-
-  type DBConnection = java.sql.Connection
-
-  def connection: DBConnection
+  def connection: Connection
 
   def query(sql: String): ResultSet = {
     val stmt = connection.prepareStatement(sql)
@@ -34,31 +27,16 @@ trait DBInterface {
   def queryOne(sql: String, column: String): String = {
     val stmt = connection.prepareStatement(sql)
     val rs = stmt.executeQuery()
-    rs.
+    rs.getObject(column).toString
   }
 
   def terminate(): Unit = {
     connection.close()
   }
 
-  /**
-   *
-   * @param resultSet ResultSet to be exported
-   * @param exportSettings
-   */
-  def exportCursorToFile(resultSet: ResultSet, exportSettings: ExportSettings) = {
-    val csvWriter = new CSVWriter(exportSettings.file, exportSettings.separator, exportSettings.quotechar, exportSettings.escapechar)
-    csvWriter.writeAll(resultSet,exportSettings.includeHeader)
-  }
-
-  def exportCursorToFile(result: List[Array[String]], exportSettings: ExportSettings) = {
-    val csvWriter = new CSVWriter(exportSettings.file, exportSettings.separator, exportSettings.quotechar, exportSettings.escapechar)
-    val newlist: java.util.List[Array[String]] = wrapAsJava.seqAsJavaList(result)
-    csvWriter.writeAll(newlist)
-  }
-
-
 }
+
+
 
 
 
