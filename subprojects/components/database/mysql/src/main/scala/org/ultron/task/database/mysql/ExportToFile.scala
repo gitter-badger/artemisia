@@ -2,7 +2,9 @@ package org.ultron.task.database.mysql
 
 import com.typesafe.config.{ConfigFactory, Config}
 import org.ultron.task.Task
+import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSettings}
+
 /**
  * Created by chlr on 4/13/16.
  */
@@ -10,23 +12,12 @@ class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfi
   extends Task(name: String) {
 
 
-  /**
-   * override this to implement the setup phase
-   *
-   * This method should have setup phase of the task, which may include actions like
-   * - creating database connections
-   * - generating relevant files
-   */
   override protected[task] def setup(): Unit = {}
 
   /**
-   * override this to implemet the work phase
    *
-   * this is where the actual work of the task is done, such as
-   * - executing query
-   * - launching subprocess
-   *
-   * @return any output of the work phase be encoded as a HOCON Config object.
+   * SQL export to file
+   * @return Empty
    */
   override protected[task] def work(): Config = {
     val dbInterface  = env.dbInterface(connectionProfile)
@@ -35,14 +26,42 @@ class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfi
     ConfigFactory.empty()
   }
 
-  /**
-   * override this to implement the teardown phase
-   *
-   * this is where you deallocate any resource you have acquired in setup phase.
-   */
   override protected[task] def teardown(): Unit = {}
 
 
+}
+
+object ExportToFile {
+
+  val default_config = ConfigFactory parseString
+    """
+      | params: {
+      |	export = {
+      |	  header = false
+      |	  delimiter = ','
+      |	  quoting = no,
+      |	  quotechar = '"'
+      |	}
+      | connection = { port: 3306 }
+      |}
+      |
+    """.stripMargin
+
+
+  /**
+   *
+   * @param name task name
+   * @param config configuration for the task
+   * @return ExportToFile object
+   */
+  def apply(name: String,inputConfig: Config) = {
+
+    val config = inputConfig withFallback default_config
+    val exportSettings = ExportSettings(config.as[Config]("export"))
+    val connectionProfile = ConnectionProfile(config.as[Config]("connection"))
+    val sql =  config.as[String]("sql")
+    new ExportToFile(name,sql,connectionProfile,exportSettings)
+  }
 }
 
 

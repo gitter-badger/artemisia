@@ -116,7 +116,15 @@ object HoconConfigUtil {
     }
   }
 
-  implicit val longListReader = new ConfigReader[List[Long]] {
+  implicit val charReader = new ConfigReader[Char] {
+    override def read(config: Config, path: String): Char = {
+      val data = config.getString(path)
+      require(data.length == 1, "Character length is not 1")
+      data.toCharArray.apply(0)
+    }
+  }
+  
+    implicit val longListReader = new ConfigReader[List[Long]] {
     override def read(config: Config, path: String): List[Long] = {
       config.getLongList(path).asScala.toList map { _.toLong }
     }
