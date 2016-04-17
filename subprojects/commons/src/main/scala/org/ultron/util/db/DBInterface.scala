@@ -8,7 +8,7 @@ import java.sql.{Connection, ResultSet}
  */
 
 
-trait DBInterface {
+trait   DBInterface {
 
   def connection: Connection
 
