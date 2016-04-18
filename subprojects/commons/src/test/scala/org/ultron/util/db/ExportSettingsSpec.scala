@@ -20,7 +20,7 @@ class ExportSettingsSpec extends TestSpec {
           |	quotechar = "\""
           |}
         """.stripMargin
-    val setting = ExportSettings(config)
+    val setting = ExportSetting(config)
     setting.escapechar must be ('\\')
     setting.header must be (true)
     setting.delimiter must be ('\t')

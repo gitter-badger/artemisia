@@ -3,7 +3,7 @@ package org.ultron.task.database.mysql
 import com.typesafe.config.{ConfigFactory, Config}
 import org.ultron.task.Task
 import org.ultron.util.HoconConfigUtil.Handler
-import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSettings}
+import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSetting}
 
 /**
  * Created by chlr on 4/13/16.
@@ -16,7 +16,7 @@ import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSettings}
  * @param connectionProfile Connection Profile settings
  * @param exportSettings Export settings
  */
-class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSettings)
+class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting)
   extends Task(name: String) {
 
 
@@ -58,7 +58,7 @@ object ExportToFile {
   def apply(name: String,inputConfig: Config) = {
 
     val config = inputConfig withFallback default_config
-    val exportSettings = ExportSettings(config.as[Config]("export"))
+    val exportSettings = ExportSetting(config.as[Config]("export"))
     val connectionProfile = ConnectionProfile(config.as[Config]("connection"))
     val sql =  config.as[String]("sql")
     new ExportToFile(name,sql,connectionProfile,exportSettings)

@@ -1,7 +1,6 @@
 package org.ultron.util.db
 
 import java.io.File
-
 import com.typesafe.config.{Config, ConfigFactory}
 import org.ultron.util.HoconConfigUtil.Handler
 
@@ -18,10 +17,10 @@ import org.ultron.util.HoconConfigUtil.Handler
  * @param quotechar character to be used for quoting if enabled
  * @param escapechar escape character to be used for escaping special characters
  */
-case class ExportSettings(file: File, header: Boolean, delimiter: Char, quoting: Boolean, quotechar: Char,
-                          escapechar: Char)
+case class ExportSetting(file: File, header: Boolean = false, delimiter: Char = ',', quoting: Boolean = false,
+                          quotechar: Char = '"', escapechar: Char = '\\')
 
-object ExportSettings {
+object ExportSetting {
 
   val default_config = ConfigFactory parseString
     """
@@ -35,9 +34,9 @@ object ExportSettings {
       |
     """.stripMargin
 
-  def apply(inputConfig: Config): ExportSettings = {
+  def apply(inputConfig: Config): ExportSetting = {
     val config = inputConfig withFallback default_config
-    ExportSettings(
+    ExportSetting(
       file = new File(config.as[String]("file")),
       header = config.as[Boolean]("header"),
       delimiter = config.as[Char]("delimiter"),
