@@ -22,7 +22,7 @@ class ExportSettingsSpec extends TestSpec {
         """.stripMargin
     val setting = ExportSettings(config)
     setting.escapechar must be ('\\')
-    setting.includeHeader must be (true)
+    setting.header must be (true)
     setting.delimiter must be ('\t')
     setting.quotechar must be ('"')
     setting.file.getName must be ("export.dat")

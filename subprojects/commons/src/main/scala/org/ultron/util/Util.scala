@@ -78,4 +78,12 @@ object Util {
       formatter.print(new DateTime())
   }
 
+  def prettyPrintAsciiTable(content: String, heading: String, width: Int = 80): String = {
+   s"""
+      |${"=" * (width / 2) } $heading ${"=" * (width / 2)}
+      |$content
+      |${"=" * (width / 2) } $heading ${"=" * (width / 2)}
+    """.stripMargin
+  }
+
 }

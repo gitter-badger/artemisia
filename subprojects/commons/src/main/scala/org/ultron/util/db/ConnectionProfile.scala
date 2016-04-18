@@ -13,11 +13,11 @@ object ConnectionProfile {
 
   def apply(config: Config): ConnectionProfile = {
        ConnectionProfile(
-      hostname = config.as[String]("connection.host"),
-      username = config.as[String]("connection.username"),
-      password = config.as[String]("connection.password"),
-      default_database = config.as[String]("connection.database"),
-      port = config.as[Int]("connection.port")
+      hostname = config.as[String]("host"),
+      username = config.as[String]("username"),
+      password = config.as[String]("password"),
+      default_database = config.as[String]("database"),
+      port = config.as[Int]("port")
     )
   }
 }

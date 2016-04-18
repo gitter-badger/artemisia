@@ -8,6 +8,14 @@ import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSettings}
 /**
  * Created by chlr on 4/13/16.
  */
+
+/**
+ *
+ * @param name name of the task instance
+ * @param sql query for the export
+ * @param connectionProfile Connection Profile settings
+ * @param exportSettings Export settings
+ */
 class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSettings)
   extends Task(name: String) {
 
@@ -28,7 +36,6 @@ class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfi
 
   override protected[task] def teardown(): Unit = {}
 
-
 }
 
 object ExportToFile {
@@ -36,12 +43,6 @@ object ExportToFile {
   val default_config = ConfigFactory parseString
     """
       | params: {
-      |	export = {
-      |	  header = false
-      |	  delimiter = ','
-      |	  quoting = no,
-      |	  quotechar = '"'
-      |	}
       | connection = { port: 3306 }
       |}
       |
