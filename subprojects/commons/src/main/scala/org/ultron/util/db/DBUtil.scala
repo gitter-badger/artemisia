@@ -41,21 +41,19 @@ object DBUtil {
 
     def nextRecord: Stream[Array[String]] = {
       if (rs.next()) {
-        val record = for ( i <- 1 to columnCount) yield {
-          rs.getString(i)
-        }
+        val record = for ( i <- 1 to columnCount) yield { rs.getString(i) }
         Stream.cons(record.toArray,nextRecord)
       } else {
         Stream.empty
       }
     }
+
     if (header) {
-      val headerRow = for (i <- 1 to columnCount) yield {
-        rs.getMetaData.getColumnLabel(i)
-      }
+      val headerRow = for (i <- 1 to columnCount) yield { rs.getMetaData.getColumnLabel(i) }
       Stream.cons(headerRow.toArray, nextRecord)
     }
-    nextRecord
+    else
+      nextRecord
   }
 
 
