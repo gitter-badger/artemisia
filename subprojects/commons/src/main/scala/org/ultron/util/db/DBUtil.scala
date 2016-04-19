@@ -2,10 +2,9 @@ package org.ultron.util.db
 
 import java.io.{BufferedWriter, FileWriter}
 import java.sql.ResultSet
+
 import au.com.bytecode.opencsv.CSVWriter
 import org.ultron.core.AppLogger
-import scala.collection._
-import scala.collection.convert.wrapAsJava
 
 /**
  * Created by chlr on 4/15/16.
@@ -16,47 +15,48 @@ object DBUtil {
   /**
    *
    * @param resultSet ResultSet to be exported
-   * @param exportSettings
+   * @param exportSettings ExportSetting object
    * @todo emit total number of records exported
+   * @return total no of rows exported
    */
   def exportCursorToFile(resultSet: ResultSet, exportSettings: ExportSetting) = {
-    // TODO: emit total no of records emitted
-    AppLogger info s"exporting resultset to file: ${exportSettings.file.getName}"
+    var recordCounter = 0
+    AppLogger info s"exporting result-set to file: ${exportSettings.file.getName}"
     val buffer = new BufferedWriter(new FileWriter(exportSettings.file))
     val csvWriter = new CSVWriter(buffer, exportSettings.delimiter,
       if (exportSettings.quoting) exportSettings.quotechar else CSVWriter.NO_QUOTE_CHARACTER, exportSettings.escapechar)
-    val data = resultSetToList(resultSet, header = exportSettings.header)
-    csvWriter.writeAll(wrapAsJava.seqAsJavaList(data))
+    val data: Stream[Array[String]] = streamResultSet(resultSet, header = exportSettings.header)
+    for (record <- data) {
+      recordCounter += 1
+      csvWriter.writeNext(record)
+    }
     buffer.close()
-    data.length
+    AppLogger info s"exported $recordCounter rows to ${exportSettings.file.getAbsolutePath}"
+    recordCounter
   }
 
-  def exportCursorToFile(result: List[Array[String]], exportSettings: ExportSetting) = {
-    AppLogger info s"exporting data to file: ${exportSettings.file.getName}"
-    val csvWriter = new CSVWriter(new FileWriter(exportSettings.file), exportSettings.delimiter,
-      if (exportSettings.quoting) exportSettings.quotechar else CSVWriter.NO_QUOTE_CHARACTER, exportSettings.escapechar)
-    val newlist: java.util.List[Array[String]] = wrapAsJava.seqAsJavaList(result)
-    csvWriter.writeAll(newlist)
-  }
 
-  private def resultSetToList(rs: ResultSet, header: Boolean = false) = {
-    val data = mutable.ListBuffer[Array[String]]()
+  private def streamResultSet(rs: ResultSet, header: Boolean = false) = {
     val columnCount = rs.getMetaData.getColumnCount
+
+    def nextRecord: Stream[Array[String]] = {
+      if (rs.next()) {
+        val record = for ( i <- 1 to columnCount) yield {
+          rs.getString(i)
+        }
+        Stream.cons(record.toArray,nextRecord)
+      } else {
+        Stream.empty
+      }
+    }
     if (header) {
-      val headerData: Seq[String] = for(i <- 1 to columnCount) yield {
+      val headerRow = for (i <- 1 to columnCount) yield {
         rs.getMetaData.getColumnLabel(i)
       }
-      data += headerData.toArray
+      Stream.cons(headerRow.toArray, nextRecord)
     }
-    while(rs.next()) {
-      val record: Seq[String] = for ( i <- 1 to columnCount) yield {
-        rs.getString(i)
-      }
-      data += record.toArray
-    }
-    data
+    nextRecord
   }
-
 
 
 }
