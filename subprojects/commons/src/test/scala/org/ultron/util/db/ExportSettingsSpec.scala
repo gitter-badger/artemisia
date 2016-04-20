@@ -11,7 +11,7 @@ class ExportSettingsSpec extends TestSpec {
   "ExportSetting" must "properly construct object from Config" in {
       val config = ConfigFactory parseString
         """
-          |export = {
+          | {
           | file = export.dat
           |	header = yes
           |	delimiter = "\t"

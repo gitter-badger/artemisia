@@ -11,7 +11,7 @@ class ConnectionProfileSpec extends TestSpec {
   "ConnectionProfile" must "correctly construct the object from config" in {
     val config = ConfigFactory parseString
       """
-        |	connection = {
+        |	{
         |		host = "database-host"
         |		username = "tango"
         |		password = "bravo"
