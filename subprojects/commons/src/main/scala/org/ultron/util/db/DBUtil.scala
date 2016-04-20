@@ -25,7 +25,7 @@ object DBUtil {
     val buffer = new BufferedWriter(new FileWriter(exportSettings.file))
     val csvWriter = new CSVWriter(buffer, exportSettings.delimiter,
       if (exportSettings.quoting) exportSettings.quotechar else CSVWriter.NO_QUOTE_CHARACTER, exportSettings.escapechar)
-    val data: Stream[Array[String]] = streamResultSet(resultSet, header = exportSettings.header)
+    val data = streamResultSet(resultSet, header = exportSettings.header)
     for (record <- data) {
       recordCounter += 1
       csvWriter.writeNext(record)
@@ -35,7 +35,12 @@ object DBUtil {
     recordCounter
   }
 
-
+  /**
+   *
+   * @param rs input ResultSet
+   * @param header include header
+   * @return Stream of records represented as array of columns
+   */
   private def streamResultSet(rs: ResultSet, header: Boolean = false) = {
     val columnCount = rs.getMetaData.getColumnCount
 

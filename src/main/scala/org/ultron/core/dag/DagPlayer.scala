@@ -3,7 +3,7 @@ package org.ultron.core.dag
 import java.util.concurrent.TimeUnit
 import akka.actor.{Actor, ActorRef}
 import org.ultron.config.AppContext
-import org.ultron.core.AppLogger
+import org.ultron.core.{Keywords, AppLogger}
 import org.ultron.core.dag.Message._
 import scala.concurrent.duration._
 
@@ -23,7 +23,7 @@ class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends
     }
   }
 
-  override def receive: Receive = healthyDag orElse onTaskComplete orElse play
+  override def receive: Receive = preReceive andThen (healthyDag orElse onTaskComplete orElse play)
 
   def healthyDag: Receive = {
     case tick: Tick => {
@@ -44,6 +44,10 @@ class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends
     }
   }
 
+  def preReceive: PartialFunction[Any,Any] = {
+    case x: Any => Thread.currentThread().setName(Keywords.APP); x
+  }
+
   def woundedDag: Receive = {
     case tick: Tick => {
       if (dag.getNodesWithStatus(Status.RUNNING).nonEmpty) {
@@ -62,16 +66,15 @@ class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends
   def onTaskComplete: Receive = {
 
     case message: TaskSuceeded => {
-      AppLogger info s"task ${message.name} completed successfully. commiting checkpoint"
+      AppLogger info s"task ${message.name} completed successfully. committing checkpoint"
       checkpoint(message.name,message.task_stats)
       AppLogger info s"checkpoint completed successfully for ${message.name}"
     }
 
     case message: TaskFailed => {
-      AppLogger info s"task ${message.name} execution failed. commiting checkpoint"
-
+      AppLogger info s"task ${message.name} execution failed. committing checkpoint"
       checkpoint(message.name,message.task_stats)
-      context.become(woundedDag orElse onTaskComplete)
+      context.become(preReceive andThen (woundedDag orElse onTaskComplete))
       AppLogger info s"checkpoint completed successfully for ${message.name}"
     }
 

@@ -7,7 +7,9 @@ import scopt.OptionParser
 object Main {
 
   var show_usage_on_error = true
+
   def main(args: Array[String]): Unit = {
+    Thread.currentThread().setName(Keywords.APP)
     parseCmdLineArguments(args,show_usage_on_error) match {
       case cmdLineParams @ AppSetting(Some("run"), Some(_), _, _, _, _,_) => Command.run(cmdLineParams)
       case cmdLineParams @ AppSetting(Some("doc"), _, _, _, _, _,_) => Command.doc(cmdLineParams)

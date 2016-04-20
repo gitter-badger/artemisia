@@ -3,6 +3,7 @@ package org.ultron.task.database.mysql
 import com.typesafe.config.{ConfigFactory, Config}
 import org.ultron.task.Task
 import org.ultron.util.HoconConfigUtil.Handler
+import org.ultron.util.Util
 import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSetting}
 
 /**
@@ -16,7 +17,7 @@ import org.ultron.util.db.{DBUtil, ConnectionProfile, ExportSetting}
  * @param connectionProfile Connection Profile settings
  * @param exportSettings Export settings
  */
-class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting)
+class ExportToFile(name: String = Util.getUUID, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting)
   extends Task(name: String) {
 
 

@@ -15,6 +15,7 @@ class Worker extends Actor {
 
   override def receive: Receive = {
     case message: TaskWrapper => {
+      Thread.currentThread().setName(message.name)
       AppLogger info s"task ${message.name} has been submitted for execution"
       val start_time = Util.currentTime
       val result: Try[TaskCompleted] = message.task.execute() map {
