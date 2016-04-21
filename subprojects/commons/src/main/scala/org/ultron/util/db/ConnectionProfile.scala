@@ -1,6 +1,7 @@
 package org.ultron.util.db
 
 import com.typesafe.config.Config
+import org.ultron.task.TaskContext
 import org.ultron.util.HoconConfigUtil.Handler
 
 /**
@@ -20,4 +21,9 @@ object ConnectionProfile {
       port = config.as[Int]("port")
     )
   }
+
+  def apply(connectionName: String): ConnectionProfile = {
+    TaskContext.predefinedConnectionProfiles(connectionName)
+  }
+
 }

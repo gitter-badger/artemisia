@@ -3,6 +3,10 @@ package org.ultron.task
 import java.nio.file.Path
 
 import com.google.common.io.Files
+import com.typesafe.config.Config
+import org.ultron.util.db.ConnectionProfile
+
+import scala.collection.JavaConverters._
 
 /**
  * Created by chlr on 3/7/16.
@@ -17,11 +21,13 @@ import com.google.common.io.Files
 private[ultron] object TaskContext {
 
   private var preferredWorkingDir: Option[Path] = None
+  var predefinedConnectionProfiles: Map[String,ConnectionProfile] = Map()
 
   /**
    *  the attribute that holds the working directory
    */
   lazy val workingDir = preferredWorkingDir.getOrElse(Files.createTempDir().toPath)
+
 
   /**
    * set the working directory to be used.
@@ -33,6 +39,16 @@ private[ultron] object TaskContext {
    */
   def setWorkingDir(working_dir: Path) = {
     preferredWorkingDir = Some(working_dir)
+  }
+
+
+  def parseConnections(connectionConfigs: Config) = {
+    val connections = connectionConfigs.entrySet.asScala map {
+      x => {
+        x.getKey -> ConnectionProfile(x.getValue.asInstanceOf[Config])
+      }
+    }
+    connections.toMap
   }
 
 }

@@ -16,6 +16,7 @@ object Keywords {
   object Config {
     val GLOBAL_FILE_REF_VAR = "ULTRONRC"
     val SETTINGS_SECTION = "__settings__"
+    val CONNECTION_SECTION = "__connections__"
     val DEFUALT_GLOBAL_CONFIG_FILE = FileSystemUtil.joinPath(System.getProperty("user.home"), "ultronrc.conf")
     val CHECKPOINT_FILE = "checkpoint.conf"
   }

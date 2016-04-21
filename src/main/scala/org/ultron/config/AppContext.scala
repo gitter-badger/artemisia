@@ -66,10 +66,8 @@ class AppContext(cmd_line_param: AppSetting) {
   }
 
   def writeCheckpoint(task_name: String, task_stats: TaskStats): Unit = {
-
     checkpoints += (task_name -> task_stats)
     payload = task_stats.taskOutput withFallback payload
-
     val content = checkpoints.foldLeft(ConfigFactory.empty()) {
         (cp_config: Config, cp: (String, TaskStats)) => {
         ConfigFactory.parseString(cp._2.toConfig(cp._1).root().render(ConfigRenderOptions.concise())) withFallback cp_config
