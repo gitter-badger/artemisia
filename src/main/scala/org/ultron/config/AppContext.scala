@@ -15,8 +15,8 @@ import scala.collection.JavaConversions._
 
 
 /**
-*  Created by chlr on 11/28/15.
-*/
+ *  Created by chlr on 11/28/15.
+ */
 
 
 class AppContext(cmd_line_param: AppSetting) {
@@ -71,7 +71,7 @@ class AppContext(cmd_line_param: AppSetting) {
     payload = task_stats.taskOutput withFallback payload
 
     val content = checkpoints.foldLeft(ConfigFactory.empty()) {
-        (cp_config: Config, cp: (String, TaskStats)) => {
+      (cp_config: Config, cp: (String, TaskStats)) => {
         ConfigFactory.parseString(cp._2.toConfig(cp._1).root().render(ConfigRenderOptions.concise())) withFallback cp_config
       }
     }
@@ -101,12 +101,11 @@ object AppContext {
   def parseDagSettingFromPayload(payload: Config) = {
     DagSetting(attempts = payload.as[Int]("attempts"), concurrency = payload.as[Int]("concurrency"),
       heartbeat_cycle = payload.as[FiniteDuration]("heartbeat_cycle"), cooldown = payload.as[FiniteDuration]("cooldown"),
-    disable_assertions = payload.as[Boolean]("disable_assertions"), ignore_conditions = payload.as[Boolean]("ignore_conditions"))
+      disable_assertions = payload.as[Boolean]("disable_assertions"), ignore_conditions = payload.as[Boolean]("ignore_conditions"))
   }
 
 }
 
 case class AppSetting(cmd: Option[String] = Some("run"), value: Option[String] = None, context: Option[String] = None
-                         , config: Option[String] = None, run_id: Option[String] = None, working_dir: Option[String] = None,
-                       skip_checkpoints: Boolean = false)
-
+                      , config: Option[String] = None, run_id: Option[String] = None, working_dir: Option[String] = None,
+                      skip_checkpoints: Boolean = false)

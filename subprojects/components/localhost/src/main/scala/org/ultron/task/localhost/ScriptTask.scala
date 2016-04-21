@@ -26,6 +26,7 @@ class ScriptTask(name: String = Util.getUUID, script: String,interpreter: String
 
   override def work(): Config = {
     AppLogger info s"executing script"
+    AppLogger info Util.prettyPrintAsciiTable(script, heading = "script")
     val result = processRunner.executeFile(cwd,env) {
       this.getFileHandle(scriptFileName).toPath.toAbsolutePath.toString
     }
