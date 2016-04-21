@@ -2,7 +2,7 @@ package org.ultron.util
 import com.typesafe.config.Config
 
 import scala.collection.JavaConverters._
-import scala.concurrent.duration.{FiniteDuration, Duration}
+import scala.concurrent.duration.{Duration, FiniteDuration}
 
 /**
  * Created by chlr on 3/18/16.
@@ -31,6 +31,7 @@ object HoconConfigUtil {
   trait ConfigReader[T] {
     def read(config: Config, path: String): T
   }
+
 
   implicit val anyRefReader = new ConfigReader[AnyRef] {
     override def read(config: Config, path: String): AnyRef = {

@@ -60,7 +60,11 @@ object ExportToFile {
 
     val config = inputConfig withFallback default_config
     val exportSettings = ExportSetting(config.as[Config]("export"))
-    val connectionProfile = ConnectionProfile(config.as[Config]("connection"))
+    val connectionProfile = config.as[AnyRef]("connection") match {
+      case x: String => ConnectionProfile(x)
+      case x: Config => ConnectionProfile(x)
+      case _ => throw new IllegalArgumentException("Invalid connection node")
+    }
     val sql =  config.as[String]("sql")
     new ExportToFile(name,sql,connectionProfile,exportSettings)
   }
