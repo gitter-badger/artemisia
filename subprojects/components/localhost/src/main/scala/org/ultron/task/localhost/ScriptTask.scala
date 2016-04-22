@@ -31,9 +31,9 @@ class ScriptTask(name: String = Util.getUUID, script: String,interpreter: String
       this.getFileHandle(scriptFileName).toPath.toAbsolutePath.toString
     }
     if (result._1.length > 0)
-      AppLogger debug s"stdout decteced: ${result._1}"
+      AppLogger debug s"stdout detected: ${result._1}"
     if (result._2.length > 0)
-      AppLogger debug s"stderr decteced: ${result._2}"
+      AppLogger debug s"stderr detected: ${result._2}"
     assert(result._3 == 0, "Non Zero return code detected")
       ConfigFactory parseString {
         if (parseOutput) result._1 else ""

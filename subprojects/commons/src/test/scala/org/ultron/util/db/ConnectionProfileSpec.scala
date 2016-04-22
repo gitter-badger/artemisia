@@ -2,6 +2,7 @@ package org.ultron.util.db
 
 import com.typesafe.config.ConfigFactory
 import org.ultron.TestSpec
+import org.ultron.core.Keywords
 
 /**
  * Created by chlr on 4/16/16.
@@ -10,13 +11,13 @@ class ConnectionProfileSpec extends TestSpec {
 
   "ConnectionProfile" must "correctly construct the object from config" in {
     val config = ConfigFactory parseString
-      """
+     s"""
         |	{
-        |		host = "database-host"
-        |		username = "tango"
-        |		password = "bravo"
-        |		database = "november"
-        |		port = 1000
+        |		${Keywords.Connection.HOSTNAME} = "database-host"
+        |		${Keywords.Connection.USERNAME} = "tango"
+        |		${Keywords.Connection.PASSWORD} = "bravo"
+        |		${Keywords.Connection.DATABASE} = "november"
+        |		${Keywords.Connection.PORT} = 1000
         |	}
       """.stripMargin
 

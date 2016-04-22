@@ -1,6 +1,6 @@
 package org.ultron.task.database.mysql
 
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.{ConfigValueType, ConfigFactory, Config}
 import org.ultron.task.Task
 import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.util.Util
@@ -60,10 +60,10 @@ object ExportToFile {
 
     val config = inputConfig withFallback default_config
     val exportSettings = ExportSetting(config.as[Config]("export"))
-    val connectionProfile = config.as[AnyRef]("connection") match {
-      case x: String => ConnectionProfile(x)
-      case x: Config => ConnectionProfile(x)
-      case _ => throw new IllegalArgumentException("Invalid connection node")
+    val connectionProfile = config.getValue("connection").valueType() match {
+      case ConfigValueType.STRING => ConnectionProfile(config.as[String]("connection"))
+      case ConfigValueType.OBJECT => ConnectionProfile(config.as[Config]("connection"))
+      case x @ _ => throw new IllegalArgumentException(s"Invalid connection node with type $x}")
     }
     val sql =  config.as[String]("sql")
     new ExportToFile(name,sql,connectionProfile,exportSettings)

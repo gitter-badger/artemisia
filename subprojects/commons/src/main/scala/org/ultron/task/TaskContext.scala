@@ -1,7 +1,7 @@
 package org.ultron.task
 
 import java.nio.file.Path
-
+import org.ultron.util.HoconConfigUtil.Handler
 import com.google.common.io.Files
 import com.typesafe.config.Config
 import org.ultron.util.db.ConnectionProfile
@@ -15,7 +15,6 @@ import scala.collection.JavaConverters._
 
 /**
  * This object is used to hold contextual information required for Task execution.
- *
  * properties such as common working directory for all tasks which doesn't qualify to an task attribute but still required for task execution goes here.
  */
 private[ultron] object TaskContext {
@@ -41,15 +40,17 @@ private[ultron] object TaskContext {
   }
 
 
+  /**
+   *
+   * @param connectionConfigs connections node to be parsed
+   * @return Map of DSNs and their corresponding [[ConnectionProfile]]
+   */
   def parseConnections(connectionConfigs: Config) = {
-    val connections = connectionConfigs.entrySet.asScala map {
-      x => {
-        x.getKey -> ConnectionProfile(x.getValue.asInstanceOf[Config])
+    val connections = connectionConfigs.root().keySet().asScala map { x =>
+        x -> ConnectionProfile(connectionConfigs.as[Config](x))
       }
-    }
     connections.toMap
   }
-
 }
 
 

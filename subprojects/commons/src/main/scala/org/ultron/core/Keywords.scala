@@ -21,6 +21,14 @@ object Keywords {
     val CHECKPOINT_FILE = "checkpoint.conf"
   }
 
+  object Connection {
+    val HOSTNAME = "host"
+    val USERNAME = "username"
+    val PASSWORD = "password"
+    val DATABASE = "database"
+    val PORT = "port"
+  }
+
   object Task {
     val COMPONENT = "Component"
     val TASK = "Task"
