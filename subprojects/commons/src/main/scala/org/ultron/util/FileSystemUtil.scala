@@ -33,24 +33,13 @@ object FileSystemUtil {
    * @param file path of the file
    * @param append set true to append content to the file.
    */
-  def writeFile(content: String,file: String, append: Boolean = true) {
-    val handle = new File(file)
-    handle.getParentFile.mkdirs()
-    val writer = new BufferedWriter(new FileWriter(handle,append))
+  def writeFile(content: String,file: File, append: Boolean = true) {
+    file.getParentFile.mkdirs()
+    val writer = new BufferedWriter(new FileWriter(file,append))
     writer.write(content)
     writer.close()
   }
 
-  /**
-   * check if a file exists or not
-   *
-   * @param file file-path
-   * @return true if file exists false if not
-   */
-
-  def fileExists(file: String): Boolean = {
-    new File(file).exists()
-  }
 
   /**
    * returns a composed path joining input paths

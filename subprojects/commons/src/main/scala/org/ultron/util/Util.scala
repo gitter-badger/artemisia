@@ -38,12 +38,12 @@ object Util {
    * @param path path of the HOCON file to be read
    * @return parsed Config object of the file
    */
-  def readConfigFile(path: String): Config = {
-    if(!Files.exists(Paths.get(path))) {
+  def readConfigFile(path: File): Config = {
+    if(!path.exists()) {
       AppLogger error s"requested config file $path not found"
       throw new FileNotFoundException(s"The Config file $path is missing")
     }
-    ConfigFactory.parseFile(new File(path))
+    ConfigFactory parseFile path
   }
 
 

@@ -1,6 +1,8 @@
 package org.ultron.config
 
 
+import java.io.File
+
 import com.typesafe.config.{ConfigObject, Config, ConfigFactory, ConfigRenderOptions}
 import org.ultron.config.AppContext.{CoreSetting, DagSetting, Logging}
 import org.ultron.util.HoconConfigUtil.Handler
@@ -33,14 +35,19 @@ class AppContext(cmd_line_param: AppSetting) {
     case (name,component) => { (name, Class.forName(component).getConstructor().newInstance().asInstanceOf[Component] ) }
   }
 
+  /**
+   * merge all config objects (Global, Code, Context) to provide unified code config object
+   * @param cmd_line_param case class of command line options
+   * @return full unified config object
+   */
   private[config] def getConfigObject(cmd_line_param: AppSetting): Config = {
     val empty_object = ConfigFactory.empty()
     val reference = ConfigFactory parseString FileSystemUtil.readResource("/reference.conf")
     val context = (cmd_line_param.context map ( ConfigFactory parseString _ )).getOrElse(empty_object)
-    val config_file = (cmd_line_param.config map Util.readConfigFile).getOrElse(empty_object)
+    val config_file = (cmd_line_param.config map { x => Util.readConfigFile(new File(x)) }).getOrElse(empty_object)
     val code = (cmd_line_param.cmd filter { _ == "run" } map
-      { x => Util.readConfigFile(cmd_line_param.value.get) }).getOrElse(empty_object)
-    val global_config_option = (globalConfigFile map { Util.readConfigFile } ).getOrElse(empty_object)
+      { x => Util.readConfigFile(new File(cmd_line_param.value.get)) }).getOrElse(empty_object)
+    val global_config_option = (globalConfigFile map { x => Util.readConfigFile(new File(x)) } ).getOrElse(empty_object)
     context withFallback config_file withFallback code withFallback global_config_option withFallback reference
   }
 
@@ -51,11 +58,15 @@ class AppContext(cmd_line_param: AppSetting) {
   }
 
 
-  def checkpointFile = FileSystemUtil.joinPath(workingDir,Keywords.Config.CHECKPOINT_FILE)
+  /**
+   *
+   * @return
+   */
+  def checkpointFile = new File(FileSystemUtil.joinPath(workingDir,Keywords.Config.CHECKPOINT_FILE))
 
   protected[config] def readCheckpoint: mutable.Map[String,TaskStats] = {
     val checkpoints = mutable.Map[String,TaskStats]()
-    if (FileSystemUtil.fileExists(checkpointFile)) {
+    if (checkpointFile.exists()) {
       AppLogger info s"checkpoint file $checkpointFile detected"
       Util.readConfigFile(checkpointFile).root() foreach {
         case (key,value: ConfigObject) => checkpoints += (key -> TaskStats(value.toConfig))

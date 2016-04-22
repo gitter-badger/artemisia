@@ -1,6 +1,6 @@
 package org.ultron.util
 
-import java.io.FileNotFoundException
+import java.io.{File, FileNotFoundException}
 import org.ultron.TestSpec
 import org.ultron.core.{Keywords, env}
 
@@ -20,7 +20,7 @@ class UtilSpec extends TestSpec {
 
   "The Util.readConfigFile" must "throw FileNotFoundException on non-existent file" in {
     intercept[FileNotFoundException] {
-      Util.readConfigFile("Some_Non_Existant_File.conf")
+      Util.readConfigFile(new File("Some_Non_Existant_File.conf"))
     }
   }
 
