@@ -1,7 +1,6 @@
 package org.ultron.config
 
 
-
 import com.typesafe.config.{ConfigObject, Config, ConfigFactory, ConfigRenderOptions}
 import org.ultron.config.AppContext.{CoreSetting, DagSetting, Logging}
 import org.ultron.util.HoconConfigUtil.Handler

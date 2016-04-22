@@ -1,6 +1,7 @@
 package org.ultron.util.db
 
-import com.typesafe.config.Config
+import com.typesafe.config.{ConfigRenderOptions, Config}
+import org.ultron.core.Keywords
 import org.ultron.task.TaskContext
 import org.ultron.util.HoconConfigUtil.Handler
 
@@ -13,12 +14,13 @@ case class ConnectionProfile(hostname: String, username: String, password: Strin
 object ConnectionProfile {
 
   def apply(config: Config): ConnectionProfile = {
+      println(config.root().render(ConfigRenderOptions.concise()))
        ConnectionProfile(
-      hostname = config.as[String]("host"),
-      username = config.as[String]("username"),
-      password = config.as[String]("password"),
-      default_database = config.as[String]("database"),
-      port = config.as[Int]("port")
+      hostname = config.as[String](Keywords.Connection.HOSTNAME),
+      username = config.as[String](Keywords.Connection.USERNAME),
+      password = config.as[String](Keywords.Connection.PASSWORD),
+      default_database = config.as[String](Keywords.Connection.DATABASE),
+      port = config.as[Int](Keywords.Connection.PORT)
     )
   }
 
