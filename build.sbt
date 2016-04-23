@@ -8,7 +8,7 @@ lazy val ultron = (project in file(".")).enablePlugins(JavaAppPackaging)
   .settings(General.settings("ultron"))
   .settings(
   libraryDependencies ++= Ultron.dependencies
-).dependsOn(commons % "compile->compile;test->test", localhost, mysql)
+).dependsOn(commons % "compile->compile;test->test", localhost, database, mysql)
 
 
 
@@ -19,12 +19,17 @@ lazy val commons = (project in General.subprojectBase / "commons").enablePlugins
   .settings(General.settings("commons"))
   .settings(libraryDependencies ++= Commons.dependencies)
 
+lazy val database = (project in General.componentBase / "database" / "database-common").enablePlugins(JavaAppPackaging)
+  .settings(General.settings("database-common")).dependsOn(commons  % "compile->compile;test->test")
+
 lazy val mysql = (project in General.componentBase / "database" / "mysql").enablePlugins(JavaAppPackaging)
-  .settings(General.settings("mysql")).dependsOn(commons  % "compile->compile;test->test")
+  .settings(General.settings("mysql"))
+  .dependsOn(commons  % "compile->compile;test->test")
+  .dependsOn(database  % "compile->compile;test->test")
   .settings(MySQL.settings)
 
 
-lazy val all = (project in file("all")).aggregate(ultron ,commons,localhost, mysql)
+lazy val all = (project in file("all")).aggregate(ultron ,commons,localhost, database, mysql)
   .enablePlugins(JavaAppPackaging)
   .settings(unidocSettings)
   .settings(site.settings ++ ghpages.settings: _*)

@@ -12,6 +12,7 @@ class MySQLComponent extends Component {
   override def dispatch(task: String, name: String, config: Config): Task = {
     task match {
       case "ExportToFile" => ExportToFile(name, config)
+      case "SQLRead" => SQLRead(name, config)
     }
   }
 }

@@ -2,21 +2,18 @@ package org.ultron.task.database.mysql
 
 import com.typesafe.config.{Config, ConfigFactory}
 import org.ultron.task.database.DBInterface
-import org.ultron.task.settings.{ExportSetting, ConnectionProfile}
+import org.ultron.task.settings.ConnectionProfile
+import org.ultron.util.Util
 import org.ultron.util.HoconConfigUtil.Handler
 
-/**
- * Created by chlr on 4/22/16.
- */
-
-class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting)
-  extends org.ultron.task.database.ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting) {
+class SQLRead(name: String = Util.getUUID, sql: String, connectionProfile: ConnectionProfile)
+  extends org.ultron.task.database.SQLRead(name, sql, connectionProfile) {
 
   override val dbInterface: DBInterface = new MysqlDBInterface(connectionProfile)
 
 }
 
-object ExportToFile {
+object SQLRead {
 
   val default_config = ConfigFactory parseString
     """
@@ -36,11 +33,8 @@ object ExportToFile {
   def apply(name: String,inputConfig: Config) = {
 
     val config = inputConfig withFallback default_config
-    val exportSettings = ExportSetting(config.as[Config]("export"))
     val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
     val sql =  config.as[String]("sql")
-    new ExportToFile(name,sql,connectionProfile,exportSettings)
+    new SQLRead(name,sql,connectionProfile)
   }
 }
-
-

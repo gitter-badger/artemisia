@@ -3,6 +3,7 @@ package org.ultron.util.db
 import com.typesafe.config.ConfigFactory
 import org.ultron.TestSpec
 import org.ultron.core.Keywords
+import org.ultron.task.settings.ConnectionProfile
 
 /**
  * Created by chlr on 4/16/16.

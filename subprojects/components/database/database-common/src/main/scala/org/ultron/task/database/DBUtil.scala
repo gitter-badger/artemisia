@@ -1,10 +1,11 @@
-package org.ultron.util.db
+package org.ultron.task.database
 
 import java.io.{BufferedWriter, FileWriter}
 import java.sql.ResultSet
 
 import au.com.bytecode.opencsv.CSVWriter
 import org.ultron.core.AppLogger
+import org.ultron.task.settings.ExportSetting
 
 /**
  * Created by chlr on 4/15/16.

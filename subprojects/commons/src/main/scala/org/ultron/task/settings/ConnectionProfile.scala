@@ -1,6 +1,6 @@
-package org.ultron.util.db
+package org.ultron.task.settings
 
-import com.typesafe.config.{ConfigRenderOptions, Config}
+import com.typesafe.config.{Config, ConfigRenderOptions, ConfigValueType}
 import org.ultron.core.Keywords
 import org.ultron.task.TaskContext
 import org.ultron.util.HoconConfigUtil.Handler
@@ -26,6 +26,19 @@ object ConnectionProfile {
 
   def apply(connectionName: String): ConnectionProfile = {
     TaskContext.predefinedConnectionProfiles(connectionName)
+  }
+
+  /**
+   *
+   * @param config
+   * @return
+   */
+  def parseConnectionProfile(config: Config) = {
+    config.getValue("dsn").valueType() match {
+      case ConfigValueType.STRING => ConnectionProfile(config.as[String]("dsn"))
+      case ConfigValueType.OBJECT => ConnectionProfile(config.as[Config]("dsn"))
+      case x @ _ => throw new IllegalArgumentException(s"Invalid connection node with type $x}")
+    }
   }
 
 }

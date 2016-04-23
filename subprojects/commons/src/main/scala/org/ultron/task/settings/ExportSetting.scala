@@ -1,6 +1,7 @@
-package org.ultron.util.db
+package org.ultron.task.settings
 
 import java.io.File
+
 import com.typesafe.config.{Config, ConfigFactory}
 import org.ultron.util.HoconConfigUtil.Handler
 

@@ -60,10 +60,14 @@ class AppContext(cmd_line_param: AppSetting) {
 
   /**
    *
-   * @return
+   * @return checkpoint file for the session
    */
   def checkpointFile = new File(FileSystemUtil.joinPath(workingDir,Keywords.Config.CHECKPOINT_FILE))
 
+  /**
+   *
+   * @return read checkpoint and return a map of [[TaskStats]]
+   */
   protected[config] def readCheckpoint: mutable.Map[String,TaskStats] = {
     val checkpoints = mutable.Map[String,TaskStats]()
     if (checkpointFile.exists()) {
@@ -75,6 +79,11 @@ class AppContext(cmd_line_param: AppSetting) {
     checkpoints
   }
 
+  /**
+   *
+   * @param task_name
+   * @param task_stats
+   */
   def writeCheckpoint(task_name: String, task_stats: TaskStats): Unit = {
 
     checkpoints += (task_name -> task_stats)

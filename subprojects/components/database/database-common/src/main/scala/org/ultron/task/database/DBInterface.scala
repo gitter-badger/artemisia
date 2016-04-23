@@ -1,7 +1,12 @@
-package org.ultron.util.db
+package org.ultron.task.database
+
+/**
+ * Created by chlr on 4/22/16.
+ */
+
 
 import java.sql.{Connection, ResultSet}
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.{Config, ConfigFactory}
 import org.ultron.core.AppLogger
 import org.ultron.util.Util
 

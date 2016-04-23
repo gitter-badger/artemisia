@@ -1,8 +1,9 @@
 package org.ultron.task.database.mysql
 
 import java.sql.{DriverManager, Connection}
+import org.ultron.task.database.DBInterface
+import org.ultron.task.settings.ConnectionProfile
 
-import org.ultron.util.db.{ConnectionProfile, DBInterface}
 
 /**
  * Created by chlr on 4/13/16.

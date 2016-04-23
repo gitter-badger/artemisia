@@ -1,10 +1,10 @@
 package org.ultron.task
 
 import java.nio.file.Path
+import org.ultron.task.settings.ConnectionProfile
 import org.ultron.util.HoconConfigUtil.Handler
 import com.google.common.io.Files
 import com.typesafe.config.Config
-import org.ultron.util.db.ConnectionProfile
 import scala.collection.JavaConverters._
 
 
