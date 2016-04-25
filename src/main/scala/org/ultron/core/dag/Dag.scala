@@ -128,7 +128,7 @@ object Dag {
 
   def parseNodeFromConfig(code: Config): Map[String, Config] = {
     (
-      code.resolve().hardResolve.root() filterNot {
+      code.hardResolve.root() filterNot {
         case (key, value) => key.startsWith("__") && key.endsWith("__")
       } filter {
         case (key, value)  =>
