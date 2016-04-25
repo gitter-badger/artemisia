@@ -15,14 +15,6 @@ class SQLRead(name: String = Util.getUUID, sql: String, connectionProfile: Conne
 
 object SQLRead {
 
-  val default_config = ConfigFactory parseString
-    """
-      | params: {
-      | connection = { port: 3306 }
-      |}
-      |
-    """.stripMargin
-
 
   /**
    *

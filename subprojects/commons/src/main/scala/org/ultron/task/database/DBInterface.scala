@@ -6,6 +6,7 @@ package org.ultron.task.database
 
 
 import java.sql.{Connection, ResultSet}
+
 import com.typesafe.config.{Config, ConfigFactory}
 import org.ultron.core.AppLogger
 import org.ultron.util.Util

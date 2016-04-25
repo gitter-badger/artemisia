@@ -1,9 +1,9 @@
 package org.ultron.util
-import com.typesafe.config.Config
 
+import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
 import scala.collection.JavaConverters._
-import scala.concurrent.duration.{FiniteDuration, Duration}
-
+import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.util.matching.Regex
 
 /**
  * Created by chlr on 3/18/16.
@@ -27,6 +27,89 @@ object HoconConfigUtil {
     }
 
   }
+
+  implicit def hardResolve(root: Config): Config = {
+
+    def resolve(config: Config): Config = {
+
+      val processed = for (key <- config.root().keySet().asScala) yield {
+        config.getAnyRef(key) match {
+          case x: String => key -> resolveString(x)
+          case x: java.lang.Iterable[AnyRef] => key -> resolveList(config.getAnyRefList(key).asScala.toIterable)
+          case x: java.util.Map[String, AnyRef] => key -> resolve(config.getConfig(key)).root().unwrapped()
+          case x => key -> x
+        }
+      }
+      ConfigFactory parseMap processed.toMap.asJava
+    }
+
+    def resolveString(str: String) = {
+      val tempNode = ConfigFactory parseString s"""{ __temp__ = $str }"""
+      tempNode.resolveWith(root).getString("__temp__")
+    }
+
+    def resolveList(list: Iterable[Any]): java.lang.Iterable[Any] = {
+      val processed: Iterable[Any] = for (node <- list) yield {
+        node match {
+          case x: java.util.Map[String,AnyRef] => {
+            resolve(ConfigValueFactory.fromMap(x).toConfig).root().unwrapped()
+          }
+          case x: java.lang.Iterable[AnyRef] => resolveList(x.asScala)
+          case x: String => resolveString(x)
+          case x => x
+        }
+      }
+      processed.asJava
+    }
+    resolve(root)
+  }
+
+  implicit def configToConfigResolver(config: Config): ConfigResolver = {
+    new ConfigResolver(config)
+  }
+
+  class ConfigResolver(val root: Config)  {
+
+    val hardResolve = resolveConfig(root)
+
+    private def resolveConfig(config: Config): Config = {
+      val processed = for (key <- config.root().keySet().asScala) yield {
+        config.getAnyRef(key) match {
+          case x: String => key -> resolveString(x)
+          case x: java.lang.Iterable[AnyRef] => key -> resolveList(config.getAnyRefList(key).asScala.toIterable)
+          case x: java.util.Map[String, AnyRef] => key -> resolveConfig(config.getConfig(key)).root().unwrapped()
+          case x => key -> x
+        }
+      }
+      ConfigFactory parseMap processed.toMap.asJava
+    }
+
+
+    private def resolveString(str: String) = {
+      def replacement(m: Regex.Match) = {
+        import java.util.regex.Matcher
+        require(m.groupCount == 1)
+        Matcher.quoteReplacement(root.getString(m group 1))
+      }
+      """\$\{[\w]+\}""".r.replaceAllIn(str, replacement _)
+    }
+
+    private def resolveList(list: Iterable[Any]): java.lang.Iterable[Any] = {
+      val processed: Iterable[Any] = for (node <- list) yield {
+        node match {
+          case x: java.util.Map[String,AnyRef] => {
+            resolveConfig(ConfigValueFactory.fromMap(x).toConfig).root().unwrapped()
+          }
+          case x: java.lang.Iterable[AnyRef] => resolveList(x.asScala)
+          case x: String => resolveString(x)
+          case x => x
+        }
+      }
+      processed.asJava
+    }
+
+  }
+
 
 
   trait ConfigReader[T] {

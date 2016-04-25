@@ -1,6 +1,6 @@
 package org.ultron.task.database.mysql
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import org.ultron.task.database.DBInterface
 import org.ultron.task.settings.{ExportSetting, ConnectionProfile}
 import org.ultron.util.HoconConfigUtil.Handler
@@ -17,15 +17,6 @@ class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfi
 }
 
 object ExportToFile {
-
-  val default_config = ConfigFactory parseString
-    """
-      | params: {
-      | connection = { port: 3306 }
-      |}
-      |
-    """.stripMargin
-
 
   /**
    *

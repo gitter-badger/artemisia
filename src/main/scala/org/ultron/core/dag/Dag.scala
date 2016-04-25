@@ -1,15 +1,14 @@
 package org.ultron.core.dag
 
 import com.typesafe.config.{Config, ConfigObject, ConfigValueType}
-import org.ultron.util.HoconConfigUtil.Handler
 import org.ultron.config.AppContext
-import org.ultron.core.{Keywords, AppLogger}
 import org.ultron.core.dag.Message.TaskStats
+import org.ultron.core.{AppLogger, Keywords}
+import org.ultron.util.HoconConfigUtil.Handler
+import org.ultron.util.HoconConfigUtil.configToConfigResolver
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
-import scala.collection.LinearSeq
-import scala.collection.mutable
-
+import scala.collection.{LinearSeq, mutable}
 
 /**
  * Created by chlr on 1/3/16.
@@ -129,7 +128,7 @@ object Dag {
 
   def parseNodeFromConfig(code: Config): Map[String, Config] = {
     (
-      code.resolve().root() filterNot {
+      code.resolve().hardResolve.root() filterNot {
         case (key, value) => key.startsWith("__") && key.endsWith("__")
       } filter {
         case (key, value)  =>

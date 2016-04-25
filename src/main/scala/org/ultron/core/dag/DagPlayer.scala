@@ -1,10 +1,12 @@
 package org.ultron.core.dag
 
 import java.util.concurrent.TimeUnit
+
 import akka.actor.{Actor, ActorRef}
 import org.ultron.config.AppContext
-import org.ultron.core.{Keywords, AppLogger}
 import org.ultron.core.dag.Message._
+import org.ultron.core.{AppLogger, Keywords}
+
 import scala.concurrent.duration._
 
 
@@ -14,10 +16,7 @@ import scala.concurrent.duration._
 
 class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends Actor {
 
-  /**
-   *
-   * @return
-   */
+
   def play: Receive = {
     case 'Play => {
       implicit val dispatcher = context.dispatcher
