@@ -1,6 +1,7 @@
 package org.ultron.util
 
-import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
+import com.typesafe.config.Config
+
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -35,52 +36,6 @@ object HoconConfigUtil {
   implicit def configToConfigResolver(config: Config): ConfigResolver = {
     new ConfigResolver(config)
   }
-
-  /**
-   * A pimp my Libary class for Hocon Config object that resolves quoted strings by doing DFS on the config tree
-   * @param root resolved Config object
-   */
-  class ConfigResolver(val root: Config)  {
-
-    val hardResolve = resolveConfig(root.resolve())
-
-    private def resolveConfig(config: Config): Config = {
-      val processed = for (key <- config.root().keySet().asScala) yield {
-        config.getAnyRef(key)  match {
-          case x: String => key -> resolveString(x)
-          case x: java.lang.Iterable[AnyRef] @unchecked => key -> resolveList(config.getAnyRefList(key).asScala.toIterable)
-          case x: java.util.Map[String, AnyRef] @unchecked => key -> resolveConfig(config.getConfig(key)).root().unwrapped()
-          case x => key -> x
-        }
-      }
-      ConfigFactory parseMap processed.toMap.asJava
-    }
-
-
-    private def resolveString(str: String) = {
-      val rgx = """\$\{([\w]+)\}""".r
-      rgx.replaceAllIn(str, {
-        x: scala.util.matching.Regex.Match => { root.getString(x.group(1)) }
-      })
-    }
-
-    @unchecked
-    private def resolveList(list: Iterable[Any]): java.lang.Iterable[Any] = {
-      val processed: Iterable[Any] = for (node <- list) yield {
-        node match {
-          case x: java.util.Map[String,AnyRef] @unchecked => {
-            resolveConfig(ConfigValueFactory.fromMap(x).toConfig).root().unwrapped()
-          }
-          case x: java.lang.Iterable[AnyRef] @unchecked => resolveList(x.asScala)
-          case x: String => resolveString(x)
-          case x => x
-        }
-      }
-      processed.asJava
-    }
-
-  }
-
 
 
   trait ConfigReader[T] {
@@ -187,7 +142,8 @@ object HoconConfigUtil {
 
   implicit val stringReader = new ConfigReader[String] {
     override def read(config: Config, path: String): String = {
-      config.getString(path)
+      val str = config.getString(path)
+      ConfigResolver.stripLeadingWhitespaces(str)
     }
   }
 
