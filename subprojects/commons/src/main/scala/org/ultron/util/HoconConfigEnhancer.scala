@@ -1,6 +1,9 @@
 package org.ultron.util
 
+import java.io.File
+
 import com.typesafe.config.{ConfigValueFactory, ConfigFactory, Config}
+import org.ultron.task.TaskContext
 import scala.util.matching.Regex.Match
 import scala.collection.JavaConverters._
 
@@ -12,14 +15,14 @@ import scala.collection.JavaConverters._
  * A pimp my Libary class for Hocon Config object that resolves quoted strings by doing DFS on the config tree
  * @param root resolved Config object
  */
-class ConfigResolver(val root: Config)  {
+class HoconConfigEnhancer(val root: Config)  {
 
   val hardResolve = resolveConfig(root.resolve())
 
   private def resolveConfig(config: Config): Config = {
     val processed = for (key <- config.root().keySet().asScala) yield {
       config.getAnyRef(key)  match {
-        case x: String => key -> ConfigResolver.resolveString(x, root)
+        case x: String => key -> HoconConfigEnhancer.resolveString(x, root)
         case x: java.lang.Iterable[AnyRef] @unchecked => key -> resolveList(config.getAnyRefList(key).asScala.toIterable)
         case x: java.util.Map[String, AnyRef] @unchecked => key -> resolveConfig(config.getConfig(key)).root().unwrapped()
         case x => key -> x
@@ -36,7 +39,7 @@ class ConfigResolver(val root: Config)  {
           resolveConfig(ConfigValueFactory.fromMap(x).toConfig).root().unwrapped()
         }
         case x: java.lang.Iterable[AnyRef] @unchecked => resolveList(x.asScala)
-        case x: String => ConfigResolver.resolveString(x, root)
+        case x: String => HoconConfigEnhancer.resolveString(x, root)
         case x => x
       }
     }
@@ -45,7 +48,8 @@ class ConfigResolver(val root: Config)  {
 
 }
 
-object ConfigResolver {
+
+object HoconConfigEnhancer {
 
   private def resolveString(str: String, reference: Config) = {
     def replace(x: Match): String = {
@@ -63,6 +67,11 @@ object ConfigResolver {
     val minWhiteSpace = (str.split("\n") filter { _.trim.length > 0 }  map { """^[\s]+""".r.findFirstIn(_).getOrElse("").length  }).min
     val result = str.split("\n") filter { _.trim.length > 0 } map { ("""^[\s]{"""+minWhiteSpace+"""}""").r.replaceFirstIn(_,"") }
     result.mkString("\n")
+  }
+
+  def readFileContent(file: File, reference: Config = TaskContext.payload) = {
+    val content = scala.io.Source.fromFile(file).mkString
+    resolveString(content,reference)
   }
 
 }

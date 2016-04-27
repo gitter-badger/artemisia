@@ -1,5 +1,7 @@
 package org.ultron.util
 
+import java.io.File
+
 import com.typesafe.config.Config
 
 import scala.collection.JavaConverters._
@@ -26,6 +28,10 @@ object HoconConfigUtil {
       if (config.hasPath(key)) Some(as[T](key)) else None
     }
 
+    def asFile(key: String): String = {
+      HoconConfigEnhancer.readFileContent(new File(config.getString(key)))
+    }
+
   }
 
   /**
@@ -33,8 +39,8 @@ object HoconConfigUtil {
    * @param config implicit function that converts Config to ConfigResolver object
    * @return ConfigResolver object
    */
-  implicit def configToConfigResolver(config: Config): ConfigResolver = {
-    new ConfigResolver(config)
+  implicit def configToConfigEnhancer(config: Config): HoconConfigEnhancer = {
+    new HoconConfigEnhancer(config)
   }
 
 
@@ -143,7 +149,7 @@ object HoconConfigUtil {
   implicit val stringReader = new ConfigReader[String] {
     override def read(config: Config, path: String): String = {
       val str = config.getString(path)
-      ConfigResolver.stripLeadingWhitespaces(str)
+      HoconConfigEnhancer.stripLeadingWhitespaces(str)
     }
   }
 

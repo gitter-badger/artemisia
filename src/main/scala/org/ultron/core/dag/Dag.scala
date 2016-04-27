@@ -4,8 +4,9 @@ import com.typesafe.config.{Config, ConfigObject, ConfigValueType}
 import org.ultron.config.AppContext
 import org.ultron.core.dag.Message.TaskStats
 import org.ultron.core.{AppLogger, Keywords}
-import org.ultron.util.HoconConfigUtil.Handler
-import org.ultron.util.HoconConfigUtil.configToConfigResolver
+import org.ultron.task.TaskContext
+import org.ultron.util.HoconConfigUtil.{Handler, configToConfigEnhancer}
+
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 import scala.collection.{LinearSeq, mutable}
@@ -127,8 +128,9 @@ object Dag {
   }
 
   def parseNodeFromConfig(code: Config): Map[String, Config] = {
+    TaskContext.payload = code.hardResolve
     (
-      code.hardResolve.root() filterNot {
+      TaskContext.payload.root() filterNot {
         case (key, value) => key.startsWith("__") && key.endsWith("__")
       } filter {
         case (key, value)  =>

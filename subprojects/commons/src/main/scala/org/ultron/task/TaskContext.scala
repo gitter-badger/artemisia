@@ -4,7 +4,7 @@ import java.nio.file.Path
 import org.ultron.task.settings.ConnectionProfile
 import org.ultron.util.HoconConfigUtil.Handler
 import com.google.common.io.Files
-import com.typesafe.config.Config
+import com.typesafe.config.{ConfigFactory, Config}
 import scala.collection.JavaConverters._
 
 
@@ -20,7 +20,14 @@ import scala.collection.JavaConverters._
 private[ultron] object TaskContext {
 
   private var preferredWorkingDir: Option[Path] = None
+
   var predefinedConnectionProfiles: Map[String,ConnectionProfile] = Map()
+
+  /**
+   * the entire payload. This field exists here to facilitate subsitution during very late stage
+   * like processing a sql_file/script_file
+   */
+  var payload: Config = ConfigFactory.empty
 
   /**
    *  the attribute that holds the working directory
@@ -51,6 +58,8 @@ private[ultron] object TaskContext {
       }
     connections.toMap
   }
+
+
 }
 
 

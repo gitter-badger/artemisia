@@ -2,7 +2,7 @@ package org.ultron.task.database.mysql
 
 import com.typesafe.config.{Config, ConfigFactory}
 import org.ultron.task.database.DBInterface
-import org.ultron.task.settings.ConnectionProfile
+import org.ultron.task.settings.{SettingNotFoundException, ConnectionProfile}
 import org.ultron.util.Util
 import org.ultron.util.HoconConfigUtil.Handler
 
@@ -26,7 +26,10 @@ object SQLRead {
 
     val config = inputConfig withFallback default_config
     val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
-    val sql =  config.as[String]("sql")
+    val sql =
+      if (config.hasPath("sql")) config.as[String]("sql")
+      else if (config.hasPath("sqlfile")) config.asFile("sqlfile")
+      else throw new SettingNotFoundException("sql/sqlfile key is missing")
     new SQLRead(name,sql,connectionProfile)
   }
 }
