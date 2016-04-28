@@ -2,7 +2,13 @@ import com.typesafe.sbt.SbtGit.GitKeys._
 import sbt._
 import sbtunidoc.Plugin.UnidocKeys._
 import Modules._
+
 assemblySettings
+
+
+
+//addCommandAlias("full-test", "clean;test;coverageReport")
+
 
 lazy val ultron = (project in file(".")).enablePlugins(JavaAppPackaging)
   .settings(General.settings("ultron"))
@@ -34,6 +40,7 @@ lazy val all = (project in file("all")).aggregate(ultron ,commons,localhost, dat
   .settings(unidocSettings)
   .settings(site.settings ++ ghpages.settings: _*)
   .settings(
+    coverageEnabled := true,
     unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(ultron),
     site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
     gitRemoteRepo := "git@github.com:mig-foxbat/ultron.git"
