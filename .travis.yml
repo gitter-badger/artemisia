@@ -6,5 +6,7 @@ scala:
 branches:
   only:
     - master
+script: "sbt fulltest"
+after_success: "sbt coveralls"
 
 
