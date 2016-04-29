@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaSbtSettings">
+    <option name="linkedExternalProjectsSettings">
+      <SbtProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="jdk" value="1.8" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/all" />
+            <option value="$PROJECT_DIR$/all/project" />
+            <option value="$PROJECT_DIR$/project" />
+            <option value="$PROJECT_DIR$/subprojects/commons" />
+            <option value="$PROJECT_DIR$/subprojects/commons/project" />
+            <option value="$PROJECT_DIR$/subprojects/components/database/database-common" />
+            <option value="$PROJECT_DIR$/subprojects/components/database/database-common/project" />
+            <option value="$PROJECT_DIR$/subprojects/components/database/mysql" />
+            <option value="$PROJECT_DIR$/subprojects/components/database/mysql/project" />
+            <option value="$PROJECT_DIR$/subprojects/components/localhost" />
+            <option value="$PROJECT_DIR$/subprojects/components/localhost/project" />
+          </set>
+        </option>
+        <option name="resolveClassifiers" value="true" />
+        <option name="resolveSbtClassifiers" value="true" />
+        <option name="sbtVersion" value="0.13.8" />
+        <option name="useAutoImport" value="true" />
+        <option name="useOurOwnAutoImport" value="true" />
+      </SbtProjectSettings>
+    </option>
+  </component>
+</project>
