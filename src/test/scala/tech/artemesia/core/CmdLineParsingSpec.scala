@@ -10,8 +10,8 @@ class CmdLineParsingSpec extends TestSpec {
   var arr: Array[String] = _
 
   override def beforeEach() = {
-     arr  = Array("run","--location","/var/tmp/ultron","--workflow_id","5f40e8c3-59c2-4548-8e51-71980c657bc0",
-      "--config","/home/ultron/config.yml","--context","k1=v1,k2=v2")
+     arr  = Array("run","--location","/var/tmp","--workflow_id","5f40e8c3-59c2-4548-8e51-71980c657bc0",
+      "--config","/home/user/config.yml","--context","k1=v1,k2=v2")
   }
 
   "CmdLineParser" must "parse cmd line arguments correctly" in {
@@ -19,11 +19,11 @@ class CmdLineParsingSpec extends TestSpec {
     info("verifying cmd property")
     cmd_line_args.cmd.getOrElse("") must be ("run")
     info("verifying value property")
-    cmd_line_args.value.getOrElse("") must be ("/var/tmp/ultron")
+    cmd_line_args.value.getOrElse("") must be ("/var/tmp")
     info("verifying workflow_id property")
     cmd_line_args.run_id.getOrElse("") must be ("5f40e8c3-59c2-4548-8e51-71980c657bc0")
     info("verifying config property")
-    cmd_line_args.config.getOrElse("") must be ("/home/ultron/config.yml")
+    cmd_line_args.config.getOrElse("") must be ("/home/user/config.yml")
     info("verifying context param")
     cmd_line_args.context.getOrElse("") must be ("k1=v1,k2=v2")
   }

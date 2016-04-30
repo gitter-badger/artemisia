@@ -7,17 +7,17 @@ import tech.artemesia.util.FileSystemUtil
  */
 object Keywords {
 
-  val APP = "Ultron"
+  val APP = "Artemesia"
 
   object ActorSys  {
     val CUSTOM_DISPATCHER = "balancing-pool-router-dispatcher"
   }
 
   object Config {
-    val GLOBAL_FILE_REF_VAR = "ULTRONRC"
+    val GLOBAL_FILE_REF_VAR = "ARTEMESIARC"
     val SETTINGS_SECTION = "__settings__"
     val CONNECTION_SECTION = "__connections__"
-    val DEFUALT_GLOBAL_CONFIG_FILE = FileSystemUtil.joinPath(System.getProperty("user.home"), "ultronrc.conf")
+    val DEFUALT_GLOBAL_CONFIG_FILE = FileSystemUtil.joinPath(System.getProperty("user.home"), "artemesia.conf")
     val CHECKPOINT_FILE = "checkpoint.conf"
   }
 

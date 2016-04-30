@@ -1,6 +1,6 @@
 import sbt._
 
-object  Ultron {
+object  Artemesia {
 
   val dependencies = Seq (
     "com.github.scopt" %% "scopt" % "3.3.0",

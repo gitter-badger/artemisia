@@ -10,10 +10,10 @@ assemblySettings
 //addCommandAlias("full-test", "clean;test;coverageReport")
 
 
-lazy val ultron = (project in file(".")).enablePlugins(JavaAppPackaging)
-  .settings(General.settings("ultron"))
+lazy val artemesia = (project in file(".")).enablePlugins(JavaAppPackaging)
+  .settings(General.settings("artemesia"))
   .settings(
-  libraryDependencies ++= Ultron.dependencies
+  libraryDependencies ++= Artemesia.dependencies
 ).dependsOn(commons % "compile->compile;test->test", localhost, mysql)
 
 
@@ -32,15 +32,15 @@ lazy val mysql = (project in General.componentBase / "database" / "mysql").enabl
   .settings(MySQL.settings)
 
 
-lazy val all = (project in file("all")).aggregate(ultron ,commons,localhost, mysql)
+lazy val all = (project in file("all")).aggregate(artemesia ,commons,localhost, mysql)
   .enablePlugins(JavaAppPackaging)
   .settings(unidocSettings)
   .settings(site.settings ++ ghpages.settings: _*)
   .settings(
     coverageEnabled := true,
-    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(ultron),
+    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(artemesia),
     site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
-    gitRemoteRepo := "git@github.com:mig-foxbat/ultron.git"
+    gitRemoteRepo := "git@github.com:mig-foxbat/artemesia.git"
   )
 
 

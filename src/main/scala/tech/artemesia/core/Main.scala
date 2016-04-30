@@ -19,9 +19,9 @@ object Main {
 
   private[core] def parseCmdLineArguments(args: Array[String],usageOnError: Boolean = true): AppSetting = {
 
-    val parser = new OptionParser[AppSetting]("ultron") {
+    val parser = new OptionParser[AppSetting](Keywords.APP) {
       this.
-      head("ultron", "0.1")
+      head(Keywords.APP, "0.1")
       cmd("run") action { (x, c) => c.copy(cmd = Some("run")) } children {
         opt[String]('l', "location") required() action { (x, c) => c.copy(value = Some(x)) } text "location of the job conf"
         opt[String]('d',"workdir") action { (x,c) => c.copy( working_dir = Some(x) ) } text "set the working directory for the current job"

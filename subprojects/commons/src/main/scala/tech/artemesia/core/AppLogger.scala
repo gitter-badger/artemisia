@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 
 /**
- *  this object is used to Ultron to format and log messages generated in the application suite.
+ *  this object is used to format and log messages generated in the application suite.
  */
 object AppLogger {
 

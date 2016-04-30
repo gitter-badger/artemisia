@@ -45,10 +45,10 @@ object FileSystemUtil {
    * returns a composed path joining input paths
    *
    * {{{
-   *   joinPath("/home","/ultron/","mydirectory")
+     *   joinPath("/home","/artemesia/","mydirectory")
    * }}}
    *
-   * would return /home/ultron/mydirectory
+   * would return /home/artemesia/mydirectory
    *
    * @param path varags of paths to be joined
    * @return new path
