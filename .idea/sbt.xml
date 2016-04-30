@@ -13,8 +13,6 @@
             <option value="$PROJECT_DIR$/project" />
             <option value="$PROJECT_DIR$/subprojects/commons" />
             <option value="$PROJECT_DIR$/subprojects/commons/project" />
-            <option value="$PROJECT_DIR$/subprojects/components/database/database-common" />
-            <option value="$PROJECT_DIR$/subprojects/components/database/database-common/project" />
             <option value="$PROJECT_DIR$/subprojects/components/database/mysql" />
             <option value="$PROJECT_DIR$/subprojects/components/database/mysql/project" />
             <option value="$PROJECT_DIR$/subprojects/components/localhost" />
