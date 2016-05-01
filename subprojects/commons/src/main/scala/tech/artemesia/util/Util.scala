@@ -24,7 +24,7 @@ object Util {
    * @param globalConfigFilePath Global config file path
    * @return parsed Config object of the global config file
    */
-  def getGlobalConfigFileLocation(globalConfigFilePath: String = Keywords.Config.DEFUALT_GLOBAL_CONFIG_FILE): Option[String] = {
+  def getGlobalConfigFileLocation(globalConfigFilePath: String = Keywords.Config.DEFAULT_GLOBAL_CONFIG_FILE): Option[String] = {
     val os_util = env.osUtil
     val result = os_util.getSystemVariable(Keywords.Config.GLOBAL_FILE_REF_VAR)
     val global_config = if ( result.isEmpty )

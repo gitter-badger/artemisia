@@ -2,6 +2,7 @@ package tech.artemesia.util
 
 import java.io._
 import java.io.BufferedReader
+import java.net.URI
 
 /**
  * Created by chlr on 3/6/16.
@@ -57,4 +58,15 @@ object FileSystemUtil {
     path.foldLeft(System.getProperty("file.separator"))((a: String, b: String) => new File(a, b).toString)
   }
 
+  /**
+   * build URI object from the given path. set file as the default scheme
+   * @param path path to be converted
+   * @return java.net.URI object
+   */
+  def makeURI(path: String) = {
+    if (URI.create(path).getScheme == null)
+       new File(path).toURI
+    else
+      new URI(path)
+  }
 }

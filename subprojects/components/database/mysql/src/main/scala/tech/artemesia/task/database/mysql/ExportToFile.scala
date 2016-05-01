@@ -1,9 +1,8 @@
 package tech.artemesia.task.database.mysql
 
-import java.io.File
+
 
 import com.typesafe.config.Config
-import tech.artemesia.task.database.DBInterface
 import tech.artemesia.task.settings.{SettingNotFoundException, ExportSetting, ConnectionProfile}
 import tech.artemesia.util.HoconConfigUtil.Handler
 import tech.artemesia.task.database.DBInterface
@@ -18,6 +17,10 @@ class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfi
 
   override val dbInterface: DBInterface = new MysqlDBInterface(connectionProfile)
 
+  override protected[task] def setup(): Unit = {
+    assert(exportSettings.file.getScheme == "file", "LocalFileSystem is the only supported destination")
+  }
+
 }
 
 object ExportToFile {
@@ -30,7 +33,7 @@ object ExportToFile {
    */
   def apply(name: String,inputConfig: Config) = {
 
-    val config = inputConfig withFallback default_config
+    val config = inputConfig withFallback defaultConfig
     val exportSettings = ExportSetting(config.as[Config]("export"))
     val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
     val sql =

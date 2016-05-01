@@ -7,10 +7,10 @@ import com.typesafe.config.ConfigFactory
  */
 package object mysql {
 
-  val default_config = ConfigFactory parseString
+  val defaultConfig = ConfigFactory parseString
     """
       | params: {
-      | connection = { port: 3306 }
+      | dsn = { port: 3306 }
       |}
       |
     """.stripMargin

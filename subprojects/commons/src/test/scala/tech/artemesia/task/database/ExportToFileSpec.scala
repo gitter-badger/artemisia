@@ -13,7 +13,7 @@ class ExportToFileSpec extends TestSpec {
   val testDbInterface = TestDBInterFactory.createDBInterface(table)
   val connectionProfile = ConnectionProfile("","","","default", 1000)
   val file = new File(this.getClass.getResource("/exports/ExportToFile.txt").getFile)
-  val exportSettings = ExportSetting(file, delimiter = 0x1)
+  val exportSettings = ExportSetting(file.toURI, delimiter = 0x1)
 
   "ExportToFile" must "export query result to file" in {
     val exportToFile = new ExportToFile(name = "ExportToFileTest",

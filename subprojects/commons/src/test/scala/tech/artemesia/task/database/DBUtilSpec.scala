@@ -14,7 +14,7 @@ class DBUtilSpec extends TestSpec {
 
   "DBUtil" must "export resultset to file with recordcount" in {
     val file: File = new File(this.getClass.getResource("/exports/DBUtilSpec.txt").getFile)
-    val cnt = DBUtil.exportCursorToFile(dbInterface.query(s"select * from $table"), ExportSetting(file = file, delimiter = '\t'))
+    val cnt = DBUtil.exportCursorToFile(dbInterface.query(s"select * from $table"), ExportSetting(file = file.toURI, delimiter = '\t'))
     cnt must be (2)
     val content = scala.io.Source.fromFile(file).mkString.split("\n")
     content(0) must be ("1\tfoo")

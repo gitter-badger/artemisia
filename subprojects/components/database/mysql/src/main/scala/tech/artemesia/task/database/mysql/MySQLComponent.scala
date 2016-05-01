@@ -13,6 +13,7 @@ class MySQLComponent extends Component {
     task match {
       case "ExportToFile" => ExportToFile(name, config)
       case "SQLRead" => SQLRead(name, config)
+      case "LoadToTable" => LoadToTable(name, config)
     }
   }
 }

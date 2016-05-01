@@ -1,5 +1,7 @@
 package tech.artemesia.task.settings
 
+import java.io.File
+
 import com.typesafe.config.ConfigFactory
 import tech.artemesia.TestSpec
 
@@ -25,6 +27,6 @@ class ExportSettingsSpec extends TestSpec {
     setting.header must be (true)
     setting.delimiter must be ('\t')
     setting.quotechar must be ('"')
-    setting.file.getName must be ("export.dat")
+    new File(setting.file).getName must be ("export.dat")
   }
 }

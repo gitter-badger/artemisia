@@ -9,6 +9,7 @@ import java.sql.{Connection, ResultSet}
 
 import com.typesafe.config.{Config, ConfigFactory}
 import tech.artemesia.core.AppLogger
+import tech.artemesia.task.settings.LoadSettings
 import tech.artemesia.util.Util
 
 
@@ -81,12 +82,15 @@ trait DBInterface {
     result
   }
 
+  def loadFile(tableName: String, loadSettings: LoadSettings): Int
+
   /**
    * close the database connection
    */
   def terminate(): Unit = {
     connection.close()
   }
+
 
 }
 

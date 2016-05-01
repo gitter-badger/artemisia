@@ -6,6 +6,7 @@ import Modules._
 assemblySettings
 
 
+coverageEnabled.in(ThisBuild ,Test, test) := true
 
 //addCommandAlias("full-test", "clean;test;coverageReport")
 

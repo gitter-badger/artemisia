@@ -1,6 +1,6 @@
 package tech.artemesia.task.database
 
-import java.io.{BufferedWriter, FileWriter}
+import java.io.{File, BufferedWriter, FileWriter}
 import java.sql.ResultSet
 
 import au.com.bytecode.opencsv.CSVWriter
@@ -22,8 +22,8 @@ object DBUtil {
     */
    def exportCursorToFile(resultSet: ResultSet, exportSettings: ExportSetting) = {
      var recordCounter = 0
-     AppLogger info s"exporting result-set to file: ${exportSettings.file.getName}"
-     val buffer = new BufferedWriter(new FileWriter(exportSettings.file))
+     AppLogger info s"exporting result-set to file: ${exportSettings.file.getPath}"
+     val buffer = new BufferedWriter(new FileWriter(new File(exportSettings.file)))
      val csvWriter = new CSVWriter(buffer, exportSettings.delimiter,
        if (exportSettings.quoting) exportSettings.quotechar else CSVWriter.NO_QUOTE_CHARACTER, exportSettings.escapechar)
      val data = streamResultSet(resultSet, header = exportSettings.header)
@@ -32,7 +32,7 @@ object DBUtil {
        csvWriter.writeNext(record)
      }
      buffer.close()
-     AppLogger info s"exported $recordCounter rows to ${exportSettings.file.getAbsolutePath}"
+     AppLogger info s"exported $recordCounter rows to ${exportSettings.file.getPath}"
      recordCounter
    }
 

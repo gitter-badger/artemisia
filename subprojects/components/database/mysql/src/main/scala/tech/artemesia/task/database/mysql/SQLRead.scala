@@ -26,7 +26,7 @@ object SQLRead {
    */
   def apply(name: String,inputConfig: Config) = {
 
-    val config = inputConfig withFallback default_config
+    val config = inputConfig withFallback defaultConfig
     val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
     val sql =
       if (config.hasPath("sql")) config.as[String]("sql")

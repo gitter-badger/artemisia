@@ -1,6 +1,7 @@
 package tech.artemesia.task.database
 
-import com.typesafe.config.Config
+import com.typesafe.config.{ConfigRenderOptions, Config}
+import tech.artemesia.core.AppLogger
 import tech.artemesia.task.Task
 import tech.artemesia.task.settings.ConnectionProfile
 import tech.artemesia.util.Util
@@ -28,7 +29,9 @@ abstract class SQLRead(name: String = Util.getUUID, sql: String, connectionProfi
    * @return config file object
    */
   override protected[task] def work(): Config = {
-    dbInterface.queryOne(sql)
+    val result = dbInterface.queryOne(sql)
+    AppLogger debug s"query result ${result.root().render(ConfigRenderOptions.concise())}"
+    result
   }
 
   override protected[task] def teardown(): Unit = {}
