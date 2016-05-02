@@ -9,10 +9,10 @@ import tech.artemesia.task.settings.LoadSettings
  */
 object TestDBInterFactory {
 
-  def createDBInterface[T <: DataLoader](table: String, mode: String = "H2") = {
+  def createDBInterface(table: String, mode: String = "H2") = {
 
 
-    val dbInterface: DBInterface = new DBInterface with T  {
+    val dbInterface: DBInterface = new DBInterface with DataLoader  {
       override def connection: Connection = {
         Class.forName("org.h2.Driver")
         DriverManager.getConnection(s"jdbc:h2:mem:test;MODE=$mode;DB_CLOSE_DELAY=-1","","")
