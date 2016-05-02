@@ -1,18 +1,21 @@
 package tech.artemesia.task.database
 
-import java.sql.{DriverManager, Connection}
+import java.sql.{Connection, DriverManager}
+
+import tech.artemesia.task.settings.LoadSettings
 
 /**
  * Created by chlr on 4/27/16.
  */
 object TestDBInterFactory {
 
-  def createDBInterface(table: String) = {
+  def createDBInterface[T <: DataLoader](table: String, mode: String = "H2") = {
 
-    val dbInterface: DBInterface = new DBInterface {
+
+    val dbInterface: DBInterface = new DBInterface with T  {
       override def connection: Connection = {
         Class.forName("org.h2.Driver")
-        DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1","","")
+        DriverManager.getConnection(s"jdbc:h2:mem:test;MODE=$mode;DB_CLOSE_DELAY=-1","","")
       }
     }
 
@@ -24,4 +27,14 @@ object TestDBInterFactory {
     dbInterface
   }
 
+  trait NopDataLoader extends DataLoader {
+    self: DBInterface =>
+
+    override def loadData(tableName: String, loadSetting: LoadSettings) = {
+        println("empty implementation of loader")
+      -1
+    }
+  }
 }
+
+

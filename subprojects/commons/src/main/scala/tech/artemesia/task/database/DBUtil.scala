@@ -1,8 +1,7 @@
 package tech.artemesia.task.database
 
-import java.io.{File, BufferedWriter, FileWriter}
+import java.io.{BufferedWriter, File, FileWriter}
 import java.sql.ResultSet
-
 import au.com.bytecode.opencsv.CSVWriter
 import tech.artemesia.core.AppLogger
 import tech.artemesia.task.settings.ExportSetting
@@ -61,6 +60,21 @@ object DBUtil {
      else
        nextRecord
    }
+
+
+  /**
+   * takes a tablename literal and parses the optional databasename part and the tablename part
+   * @param tableName
+   * @return
+   */
+  def parseTableName(tableName: String): (Option[String],String) = {
+      val result  = tableName.split("""\.""").toList
+      result.length match {
+        case 1 => None -> result.head
+        case 2 => Some(result.head) -> result(1)
+        case _ => throw new IllegalArgumentException(s"$tableName is a valid table identifier")
+      }
+  }
 
 
  }

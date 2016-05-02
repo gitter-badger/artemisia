@@ -27,6 +27,8 @@ import tech.artemesia.util.Util
  */
 trait DBInterface {
 
+  self: DataLoader =>
+
   /**
    *
    * @return connection to the database
@@ -82,13 +84,33 @@ trait DBInterface {
     result
   }
 
-  def loadFile(tableName: String, loadSettings: LoadSettings): Int
+  def load(tableName: String, loadSettings: LoadSettings): Int = {
+    self.loadData(tableName, loadSettings)
+  }
 
   /**
    * close the database connection
    */
   def terminate(): Unit = {
     connection.close()
+  }
+
+  /**
+   *
+   * @param databaseName databasename
+   * @param tableName tablename
+   * @return Iterable of Tuple of name and type of the column
+   */
+  def getTableMetadata(databaseName: Option[String] ,tableName: String): Iterable[(String,Int)] = {
+    val effectiveTableName = (databaseName map {x => s"$x.$tableName"}).getOrElse(tableName)
+    val sql = s"SELECT * FROM $effectiveTableName"
+    val rs = this.query(sql)
+    val metadata = rs.getMetaData
+    val result = for (i <- 1 to metadata.getColumnCount) yield {
+      metadata.getColumnName(i) -> metadata.getColumnType(i)
+    }
+    rs.close()
+    result
   }
 
 
