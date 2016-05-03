@@ -1,8 +1,9 @@
 package tech.artemesia.task.settings
 
 import java.net.URI
+
+import com.typesafe.config.{Config, ConfigFactory}
 import tech.artemesia.util.HoconConfigUtil.Handler
-import com.typesafe.config.{ConfigFactory, Config}
 
 /**
  * Created by chlr on 4/30/16.
@@ -11,8 +12,9 @@ import com.typesafe.config.{ConfigFactory, Config}
 /**
  * Load settings definition
  */
-case class LoadSettings(location: URI, skipRows: Int = 0, delimiter: Char = ',', quoting: Boolean = false,
-                        quotechar: Char = '"', escapechar: Char = '\\') {
+case class LoadSettings(location: URI, skipRows: Int = 0, override val delimiter: Char = ',', override val quoting: Boolean = false,
+                        override val quotechar: Char = '"', override val escapechar: Char = '\\') extends
+    CSVSettings(skipRows, delimiter, quoting, quotechar, escapechar) {
 
 }
 

@@ -2,7 +2,7 @@ package tech.artemesia.task.database
 
 import java.io.{BufferedWriter, File, FileWriter}
 import java.sql.ResultSet
-import au.com.bytecode.opencsv.CSVWriter
+import com.opencsv.CSVWriter
 import tech.artemesia.core.AppLogger
 import tech.artemesia.task.settings.ExportSetting
 

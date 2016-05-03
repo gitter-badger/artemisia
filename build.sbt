@@ -18,7 +18,6 @@ lazy val artemesia = (project in file(".")).enablePlugins(JavaAppPackaging)
 ).dependsOn(commons % "compile->compile;test->test", localhost, mysql)
 
 
-
 lazy val localhost = (project in General.componentBase / "localhost").enablePlugins(JavaAppPackaging)
   .settings(General.settings("localhost")).dependsOn(commons  % "compile->compile;test->test")
 

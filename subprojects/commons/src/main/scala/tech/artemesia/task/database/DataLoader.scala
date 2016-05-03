@@ -1,11 +1,11 @@
 package tech.artemesia.task.database
 
-import java.io.File
+import java.io.{FileReader, BufferedReader, File}
 import java.math
-import java.sql.Types
+import java.sql.{SQLException, Types}
 
 import tech.artemesia.task.settings.LoadSettings
-import tech.artemesia.util.CSVFileIterator
+import tech.artemesia.util.CSVFileReader
 
 /**
  * Created by chlr on 5/1/16.
@@ -18,9 +18,10 @@ trait DataLoader {
 
   self: DBInterface =>
 
-  def loadData(tableName: String, loadSettings: LoadSettings): Int = {
+  def loadData(tableName: String, loadSettings: LoadSettings, errorFile: File): Int = {
     assert(loadSettings.location.getScheme == "file", "File URI is the only supported URI")
-    val csvIterator = new CSVFileIterator(new File(loadSettings.location))
+    val rejectedRecords = new BufferedReader(new FileReader(errorFile))
+    val csvIterator = new CSVFileReader(new File(loadSettings.location))
     val parsedTableName = DBUtil.parseTableName(tableName)
     val tableMetadata = self.getTableMetadata(parsedTableName._1, parsedTableName._2).toVector
     val insertSQL =
@@ -55,11 +56,14 @@ trait DataLoader {
           case Types.TIME_WITH_TIMEZONE => stmt.setTime(i, java.sql.Time.valueOf(row(i)))
           case Types.TINYINT => stmt.setByte(i, java.lang.Byte.parseByte(row(i)))
           case Types.VARCHAR => stmt.setString(i, row(i))
-          case _ => throw new UnsupportedOperationException(s" unsupported jdbc datatype " +
-            s"code ${tableMetadata(i)._2} for column ${tableMetadata(1)._1}")
+          case _ => stmt.setString(i,row(i))
         }
       }
-      stmt.execute()
+      try {
+        stmt.execute()
+      } catch {
+        case e: SQLException =>
+      }
     }
     csvIterator.rowCounter
   }

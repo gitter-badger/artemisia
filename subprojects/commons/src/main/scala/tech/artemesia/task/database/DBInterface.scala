@@ -5,6 +5,7 @@ package tech.artemesia.task.database
  */
 
 
+import java.io.File
 import java.sql.{Connection, ResultSet}
 
 import com.typesafe.config.{Config, ConfigFactory}
@@ -84,8 +85,8 @@ trait DBInterface {
     result
   }
 
-  def load(tableName: String, loadSettings: LoadSettings): Int = {
-    self.loadData(tableName, loadSettings)
+  def load(tableName: String, loadSettings: LoadSettings, errorFile: File): Int = {
+    self.loadData(tableName, loadSettings, errorFile)
   }
 
   /**
