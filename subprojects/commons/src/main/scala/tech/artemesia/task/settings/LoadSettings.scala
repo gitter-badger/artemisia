@@ -14,7 +14,7 @@ import tech.artemesia.util.HoconConfigUtil.Handler
  */
 case class LoadSettings(location: URI, skipRows: Int = 0, override val delimiter: Char = ',', override val quoting: Boolean = false,
                         override val quotechar: Char = '"', override val escapechar: Char = '\\') extends
-    CSVSettings(skipRows, delimiter, quoting, quotechar, escapechar) {
+    CSVSettings(delimiter, quoting, quotechar, escapechar) {
 
 }
 

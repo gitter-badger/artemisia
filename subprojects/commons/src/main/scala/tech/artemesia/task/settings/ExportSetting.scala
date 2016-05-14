@@ -19,10 +19,10 @@ import tech.artemesia.util.HoconConfigUtil.Handler
  * @param quotechar character to be used for quoting if enabled
  * @param escapechar escape character to be used for escaping special characters
  */
-case class ExportSetting(file: URI, header: Boolean = false, override val delimiter: Char = ',',
+  case class ExportSetting(file: URI, header: Boolean = false, override val delimiter: Char = ',',
                          override val quoting: Boolean = false, override val quotechar: Char = '"',
                          override val escapechar: Char = '\\')
-  extends CSVSettings(headerLines = if (header) 1 else 0 ,delimiter, quoting, quotechar, escapechar)
+  extends CSVSettings(delimiter, quoting, quotechar, escapechar)
 
 object ExportSetting {
 

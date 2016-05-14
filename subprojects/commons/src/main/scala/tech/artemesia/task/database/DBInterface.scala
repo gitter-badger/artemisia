@@ -85,7 +85,7 @@ trait DBInterface {
     result
   }
 
-  def load(tableName: String, loadSettings: LoadSettings, errorFile: File): Int = {
+  def load(tableName: String, loadSettings: LoadSettings, errorFile: File): Long = {
     self.loadData(tableName, loadSettings, errorFile)
   }
 
@@ -113,7 +113,6 @@ trait DBInterface {
     rs.close()
     result
   }
-
 
 }
 

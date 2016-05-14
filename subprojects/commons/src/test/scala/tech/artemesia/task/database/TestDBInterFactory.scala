@@ -1,5 +1,6 @@
 package tech.artemesia.task.database
 
+import java.io.File
 import java.sql.{Connection, DriverManager}
 
 import tech.artemesia.task.settings.LoadSettings
@@ -9,13 +10,14 @@ import tech.artemesia.task.settings.LoadSettings
  */
 object TestDBInterFactory {
 
-  def createDBInterface(table: String, mode: String = "H2") = {
+  def createDBInterface(table: String, mode: Option[String] = None) = {
 
 
     val dbInterface: DBInterface = new DBInterface with DataLoader  {
       override def connection: Connection = {
+        val modeoption = (mode map { x => s"MODE=$x;" }).getOrElse("")
         Class.forName("org.h2.Driver")
-        DriverManager.getConnection(s"jdbc:h2:mem:test;MODE=$mode;DB_CLOSE_DELAY=-1","","")
+        DriverManager.getConnection(s"jdbc:h2:mem:test;${modeoption}DB_CLOSE_DELAY=-1","","")
       }
     }
 
@@ -30,7 +32,7 @@ object TestDBInterFactory {
   trait NopDataLoader extends DataLoader {
     self: DBInterface =>
 
-    override def loadData(tableName: String, loadSetting: LoadSettings) = {
+    override def loadData(tableName: String, loadSetting: LoadSettings, errorFile: File) = {
         println("empty implementation of loader")
       -1
     }

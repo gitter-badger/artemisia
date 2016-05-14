@@ -1,5 +1,8 @@
 package tech.artemesia.task.database.mysql
 
+import java.io.File
+
+import tech.artemesia.core.AppLogger
 import tech.artemesia.task.database.DataLoader
 import tech.artemesia.task.settings.LoadSettings
 
@@ -10,7 +13,8 @@ import tech.artemesia.task.settings.LoadSettings
 trait MySQLDataLoader extends DataLoader {
   self: MysqlDBInterface =>
 
-  override def loadData(tableName: String, loadSettings: LoadSettings): Int = {
+  override def loadData(tableName: String, loadSettings: LoadSettings, errorFile: File): Long = {
+    AppLogger debug "error file is ignored in this mode"
     this.execute(getLoadSQL(loadSettings, tableName))
   }
 
