@@ -19,6 +19,16 @@ trait DataLoader {
 
   self: DBInterface =>
 
+
+  /**
+   * A generic function that loads a file to table by iterating each row of the file
+   * and running INSERT INTO TABLE query
+   *
+   * @param tableName target table to load
+   * @param loadSettings load settings
+   * @param errorFile file containing error records
+   * @return number of records inserted
+   */
   def loadData(tableName: String, loadSettings: LoadSettings, errorFile: File): Long = {
 
     assert(loadSettings.location.getScheme == "file", "File URI is the only supported URI")
