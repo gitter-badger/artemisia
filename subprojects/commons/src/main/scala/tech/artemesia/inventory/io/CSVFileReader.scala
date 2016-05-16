@@ -1,4 +1,4 @@
-package tech.artemesia.util
+package tech.artemesia.inventory.io
 
 import java.io.{BufferedReader, File, FileReader}
 

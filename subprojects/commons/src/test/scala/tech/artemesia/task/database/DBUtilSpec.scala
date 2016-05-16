@@ -10,7 +10,7 @@ import tech.artemesia.task.settings.ExportSetting
 class DBUtilSpec extends TestSpec {
 
   val table = "db_utilspec"
-  val dbInterface = TestDBInterFactory.createDBInterface(table)
+  val dbInterface = TestDBInterFactory.withDefaultDataLoader(table)
 
   "DBUtil" must "export resultset to file with recordcount" in {
     val file: File = new File(this.getClass.getResource("/exports/DBUtilSpec.txt").getFile)

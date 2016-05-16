@@ -1,12 +1,15 @@
 package tech.artemesia.util
 
-import java.io._
-import java.io.BufferedReader
+import java.io.{BufferedReader, _}
 import java.net.URI
+
+import tech.artemesia.task.TaskContext
 
 /**
  * Created by chlr on 3/6/16.
  */
+
+
 
 
 /**
@@ -69,4 +72,51 @@ object FileSystemUtil {
     else
       new URI(path)
   }
+
+  /**
+   * an utility function that works similar to try with resources
+   * @param fileName name of the file to be created
+   * @param body the code block that takes the newly created file as input
+   * @return
+   */
+  def withFile(fileName: String)(body: File => Unit): Unit = {
+    val file = new File(TaskContext.workingDir.toFile,fileName)
+    body(file)
+    file.delete()
+  }
+
+
+  /**
+   * A pimp my library pattern for enhancing java.io.File object with BufferedWriter methods
+   * @param file file object to be enhanced.
+   */
+  implicit class FileEnhancer(file: File) {
+
+    private val writer = new BufferedWriter(new FileWriter(file))
+
+    /**
+     * write provided content appended with a new line
+     * @param content
+     */
+    def writeLine(content: String) = {
+      writer.write(content+"\n")
+    }
+
+    /**
+     * write content to file
+     * @param content
+     */
+    def write(content: String) = {
+      writer.write(content)
+    }
+
+    /**
+     * Flush the content of the buffer to the file
+     */
+    def flush() = {
+      writer.flush()
+    }
+
+  }
+
 }

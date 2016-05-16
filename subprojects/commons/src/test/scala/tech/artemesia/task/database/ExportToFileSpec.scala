@@ -10,7 +10,7 @@ import tech.artemesia.task.settings.{ConnectionProfile, ExportSetting}
 class ExportToFileSpec extends TestSpec {
 
   val table = "export_to_file"
-  val testDbInterface = TestDBInterFactory.createDBInterface(table)
+  val testDbInterface = TestDBInterFactory.withDefaultDataLoader(table)
   val connectionProfile = ConnectionProfile("","","","default", 1000)
   val file = new File(this.getClass.getResource("/exports/ExportToFile.txt").getFile)
   val exportSettings = ExportSetting(file.toURI, delimiter = 0x1)

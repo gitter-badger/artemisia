@@ -8,7 +8,7 @@ import tech.artemesia.TestSpec
 class DBInterfaceSpec extends TestSpec {
 
   val table = "db_interface"
-  val dbInterface = TestDBInterFactory.createDBInterface(table)
+  val dbInterface = TestDBInterFactory.withDefaultDataLoader(table)
 
   "DBInterface" must "execute queries correctly" in {
     val rs = dbInterface.query(s"SELECT * FROM $table")

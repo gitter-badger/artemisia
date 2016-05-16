@@ -9,7 +9,7 @@ import tech.artemesia.task.settings.ConnectionProfile
 class SQLReadSpec extends TestSpec {
 
   val table = "sql_read"
-  val testDbInterface = TestDBInterFactory.createDBInterface(table)
+  val testDbInterface = TestDBInterFactory.withDefaultDataLoader(table)
   val connectionProfile = ConnectionProfile("","","","",1000)
 
     "SQLRead" must "must a query and emit config object" in {

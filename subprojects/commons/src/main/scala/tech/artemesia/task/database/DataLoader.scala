@@ -5,8 +5,9 @@ import java.math
 import java.sql.{SQLException, Types}
 
 import tech.artemesia.core.AppLogger
-import tech.artemesia.task.settings.{ExportSetting, LoadSettings}
-import tech.artemesia.util.{CSVFileWriter, CSVFileReader}
+import tech.artemesia.inventory.io.{NullFileWriter, FileDataWriter, CSVFileReader}
+import tech.artemesia.inventory.NullFileWriter
+import tech.artemesia.task.settings.LoadSettings
 
 /**
  * Created by chlr on 5/1/16.
@@ -26,14 +27,12 @@ trait DataLoader {
    *
    * @param tableName target table to load
    * @param loadSettings load settings
-   * @param errorFile file containing error records
+   * @param errorWriter file containing error records
    * @return number of records inserted
    */
-  def loadData(tableName: String, loadSettings: LoadSettings, errorFile: File): Long = {
+  def loadData(tableName: String, loadSettings: LoadSettings, errorWriter: FileDataWriter = NullFileWriter): Long = {
 
     assert(loadSettings.location.getScheme == "file", "File URI is the only supported URI")
-
-    val rejectedRecordWriter = new CSVFileWriter(ExportSetting(errorFile.toURI,header = false,'\u0001', quoting = false))
 
     val csvReader = new CSVFileReader(new File(loadSettings.location), loadSettings)
     val parsedTableName = DBUtil.parseTableName(tableName)
@@ -72,7 +71,7 @@ trait DataLoader {
       } catch {
         case e: SQLException => {
           AppLogger debug s"row ${csvReader.rowCounter}"
-          rejectedRecordWriter.writeRow(row)
+          errorWriter.writeRow(row)
         }
       }
     }
