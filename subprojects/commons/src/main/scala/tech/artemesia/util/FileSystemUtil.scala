@@ -98,17 +98,12 @@ object FileSystemUtil {
      * write provided content appended with a new line
      * @param content
      */
-    def writeLine(content: String) = {
+    def <<= (content: String) = {
+      assert(file.isFile, "cannot write to a directory")
       writer.write(content+"\n")
+      writer.flush()
     }
 
-    /**
-     * write content to file
-     * @param content
-     */
-    def write(content: String) = {
-      writer.write(content)
-    }
 
     /**
      * Flush the content of the buffer to the file

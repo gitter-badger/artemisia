@@ -15,7 +15,7 @@ abstract class LoadToTable(name: String, tablename: String, connectionProfile: C
   val dbInterface: DBInterface
 
   override def work(): Config = {
-    val recordCnt = dbInterface.load(tablename, loadSettings, this.getFileHandle("error_file.txt"))
+    val recordCnt = dbInterface.load(tablename, loadSettings)
     AppLogger info s"$recordCnt rows loaded into table $tablename"
     ConfigFactory parseString s" { rows = $recordCnt }"
   }

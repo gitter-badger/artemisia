@@ -13,7 +13,7 @@ import tech.artemesia.util.HoconConfigUtil.Handler
  * Load settings definition
  */
 case class LoadSettings(location: URI, skipRows: Int = 0, override val delimiter: Char = ',', override val quoting: Boolean = false,
-                        override val quotechar: Char = '"', override val escapechar: Char = '\\') extends
+                        override val quotechar: Char = '"', override val escapechar: Char = '\\', mode: String = "default", rejectFile: Option[String] = None) extends
     CSVSettings(delimiter, quoting, quotechar, escapechar) {
 
 }
@@ -22,7 +22,6 @@ object LoadSettings {
 
   val default_config = ConfigFactory parseString
     """
-      |
       |{
       |	header =  no
       |	skip-lines = 0
@@ -30,6 +29,8 @@ object LoadSettings {
       |	quoting = no
       |	quotechar = "\""
       | escapechar = "\\"
+      | mode = generic
+      | error-file = null
       |}
     """.stripMargin
 
@@ -41,7 +42,9 @@ object LoadSettings {
     delimiter = config.as[Char]("delimiter"),
     quoting = config.as[Boolean]("quoting"),
     quotechar = config.as[Char]("quotechar"),
-    escapechar = config.as[Char]("escapechar")
+    escapechar = config.as[Char]("escapechar"),
+    mode = config.as[String]("mode"),
+    rejectFile = if (config.getIsNull("error-file")) None else Some(config.as[String]("error-file"))
     )
   }
 

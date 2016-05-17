@@ -9,7 +9,6 @@ import java.sql.{Connection, ResultSet}
 
 import com.typesafe.config.{Config, ConfigFactory}
 import tech.artemesia.core.AppLogger
-import tech.artemesia.inventory.io.FileDataWriter
 import tech.artemesia.task.settings.LoadSettings
 import tech.artemesia.util.Util
 
@@ -85,8 +84,8 @@ trait DBInterface {
     result
   }
 
-  def load(tableName: String, loadSettings: LoadSettings, errorWriter: FileDataWriter): Long = {
-    self.loadData(tableName, loadSettings, errorWriter)
+  def load(tableName: String, loadSettings: LoadSettings): Long = {
+    self.loadData(tableName, loadSettings)
   }
 
   /**

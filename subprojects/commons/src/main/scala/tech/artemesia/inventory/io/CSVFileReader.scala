@@ -1,7 +1,6 @@
 package tech.artemesia.inventory.io
 
 import java.io.{BufferedReader, File, FileReader}
-
 import com.opencsv.CSVReader
 import tech.artemesia.task.settings.LoadSettings
 
@@ -10,21 +9,23 @@ import tech.artemesia.task.settings.LoadSettings
  */
 
 
-class CSVFileReader(file: File, settings: LoadSettings) extends Iterator[Array[String]] {
+class CSVFileReader(settings: LoadSettings) extends Iterator[Array[String]] {
 
-  private var lastRow: Array[String] = Array()
-  private val reader = new CSVReader(new BufferedReader(new FileReader(file)), settings.delimiter, settings.quotechar,
-    settings.escapechar, settings.skipRows)
+  private var currentRow  = Array[String]()
+  private val reader = new CSVReader(new BufferedReader(new FileReader(new File(settings.location))), settings.delimiter,
+    settings.quotechar, settings.escapechar, settings.skipRows)
 
+  currentRow = reader.readNext()
   def rowCounter = reader.getLinesRead
 
   override def hasNext: Boolean = {
-    !(lastRow == null)
+    !(currentRow == null)
   }
 
   override def next(): Array[String] = {
-    lastRow = reader.readNext()
-    lastRow
+    val row = currentRow
+    currentRow = reader.readNext()
+    row
   }
 
 }
