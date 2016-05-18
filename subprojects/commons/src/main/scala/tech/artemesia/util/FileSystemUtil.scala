@@ -1,9 +1,10 @@
 package tech.artemesia.util
 
-import java.io.{BufferedReader, _}
+import java.io._
 import java.net.URI
-
 import tech.artemesia.task.TaskContext
+
+import scala.io.Source
 
 /**
  * Created by chlr on 3/6/16.
@@ -93,6 +94,7 @@ object FileSystemUtil {
   implicit class FileEnhancer(file: File) {
 
     private val writer = new BufferedWriter(new FileWriter(file))
+    private val reader = new BufferedReader(new FileReader(file))
 
     /**
      * write provided content appended with a new line
@@ -104,12 +106,13 @@ object FileSystemUtil {
       writer.flush()
     }
 
-
     /**
-     * Flush the content of the buffer to the file
+     *
+     * @return content of the file
      */
-    def flush() = {
-      writer.flush()
+    def content = {
+      assert(file.isFile, "cannot write to a directory")
+      Source.fromFile(file).getLines().mkString("\n")
     }
 
   }

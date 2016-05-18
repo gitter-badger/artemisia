@@ -28,12 +28,13 @@ trait DataLoader {
    * @param loadSettings load settings
    * @return number of records inserted
    */
-  def loadData(tableName: String, loadSettings: LoadSettings): Long = {
+  def loadData(tableName: String, loadSettings: LoadSettings) = {
 
     assert(loadSettings.location.getScheme == "file", "File URI is the only supported URI")
 
     val csvReader = new CSVFileReader(loadSettings)
     val errorWriter = loadSettings.rejectFile.map( x => new CSVFileWriter(ExportSetting(new File(x).toURI,false,'\u0001',false)) ).getOrElse(NullFileWriter)
+    var rejectedRecordCounter =  0L
     val parsedTableName = DBUtil.parseTableName(tableName)
     val tableMetadata = self.getTableMetadata(parsedTableName._1, parsedTableName._2).toVector
     val insertSQL =
@@ -70,22 +71,26 @@ trait DataLoader {
         stmt.execute()
       } catch {
         case e: SQLException => {
-          AppLogger debug s"row ${csvReader.rowCounter} insert failed"
+          rejectedRecordCounter += 1L
+          AppLogger debug s"row ${csvReader.rowCounter} insert statement failed"
           errorWriter.writeRow(row)
         }
 
         case e: AssertionError => {
+          rejectedRecordCounter += 1L
           AppLogger debug s"row ${csvReader.rowCounter} schema doesn't match target schema"
           errorWriter.writeRow(row)
         }
 
         case e: Exception => {
+          rejectedRecordCounter += 1L
           AppLogger debug s"row ${csvReader.rowCounter} insert failed"
           errorWriter.writeRow(row)
         }
       }
     }
-    csvReader.rowCounter
+    errorWriter.close()
+    csvReader.rowCounter -> rejectedRecordCounter
   }
 }
 

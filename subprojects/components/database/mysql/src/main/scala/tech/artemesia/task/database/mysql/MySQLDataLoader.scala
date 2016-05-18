@@ -11,9 +11,9 @@ import tech.artemesia.task.settings.LoadSettings
 trait MySQLDataLoader extends DataLoader {
   self: MysqlDBInterface =>
 
-  override def loadData(tableName: String, loadSettings: LoadSettings): Long = {
+  override def loadData(tableName: String, loadSettings: LoadSettings) = {
     AppLogger debug "error file is ignored in this mode"
-    this.execute(getLoadSQL(loadSettings, tableName))
+    this.execute(getLoadSQL(loadSettings, tableName)) -> -1L
   }
 
   def getLoadSQL(loadSettings: LoadSettings, tableName: String) = {

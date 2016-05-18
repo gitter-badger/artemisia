@@ -52,7 +52,7 @@ trait DBInterface {
    * @param sql DML query to be executed
    * @return number of records updated/deleted/inserted
    */
-  def execute(sql: String): Int = {
+  def execute(sql: String): Long = {
     AppLogger info "executing query"
     AppLogger info Util.prettyPrintAsciiTable(sql,"query")
     val stmt = connection.prepareStatement(sql)
@@ -84,7 +84,7 @@ trait DBInterface {
     result
   }
 
-  def load(tableName: String, loadSettings: LoadSettings): Long = {
+  def load(tableName: String, loadSettings: LoadSettings) = {
     self.loadData(tableName, loadSettings)
   }
 

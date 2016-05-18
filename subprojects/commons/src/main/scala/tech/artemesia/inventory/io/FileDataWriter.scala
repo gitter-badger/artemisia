@@ -10,4 +10,6 @@ abstract class FileDataWriter {
 
   def writeRow(data: String)
 
+  def close(): Unit
+
 }

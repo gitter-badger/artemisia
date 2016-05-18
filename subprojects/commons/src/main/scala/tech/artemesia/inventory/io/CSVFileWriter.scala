@@ -21,4 +21,10 @@ class CSVFileWriter(settings: ExportSetting) extends FileDataWriter {
 
   override def writeRow(data: String) = ???
 
+  override def close() = {
+    writer.flush()
+    writer.close()
+  }
+
+
 }
