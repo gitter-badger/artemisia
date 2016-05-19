@@ -3,8 +3,8 @@ package tech.artemesia.task
 import java.io.{File, PrintWriter}
 
 import com.google.common.io.Files
-import com.typesafe.config.Config
-import tech.artemesia.core.{LogSource, AppLogger}
+import com.typesafe.config.{ConfigFactory, Config}
+import tech.artemesia.core.{Keywords, LogSource, AppLogger}
 import tech.artemesia.util.FileSystemUtil
 
 import scala.io.Source
@@ -83,7 +83,7 @@ abstract class Task(val taskName: String) {
   protected[task] def setup(): Unit
 
   /**
-   * override this to implemet the work phase
+   * override this to implement the work phase
    *
    * this is where the actual work of the task is done, such as
    *  - executing query
@@ -101,11 +101,35 @@ abstract class Task(val taskName: String) {
    */
   protected[task] def teardown(): Unit
 
-  def execute: Config = {
+  def execute(): Config = {
     this.setup()
     val result = this.work()
     this.teardown()
     result
+  }
+
+  /**
+   * take a task stat config object and wrap up it with proper format
+   * for eg: a task with node name of xyz with stats config object
+   * of { foo = bar } will be transformed as
+   * {{{
+   *  xyx {
+   *    __stats__ = {
+   *        foo = bar
+   *     }
+   *  }
+   * }}}
+   *
+   * @param config
+   * @return
+   */
+  def wrapAsStats(config: Config) = {
+    ConfigFactory parseString
+      s"""
+        |$taskName = {
+        |  ${Keywords.TaskStats.STATS} = ${config.root().render()}
+        |}
+      """.stripMargin
   }
 
 }

@@ -2,7 +2,9 @@ package tech.artemesia.task.database
 
 import java.io.File
 import tech.artemesia.TestSpec
+import tech.artemesia.core.Keywords
 import tech.artemesia.task.settings.{ConnectionProfile, ExportSetting}
+import tech.artemesia.util.HoconConfigUtil.Handler
 
 /**
  * Created by chlr on 4/28/16.
@@ -23,7 +25,8 @@ class ExportToFileSpec extends TestSpec {
     ) {
       override val dbInterface: DBInterface = testDbInterface
     }
-    exportToFile.execute
+    val config = exportToFile.execute()
+    config.as[Int](s"ExportToFileTest.${Keywords.TaskStats.STATS}.rows") must be (2)
     scala.io.Source.fromFile(file).getLines().toList(1) must be ("2\u0001bar")
   }
 

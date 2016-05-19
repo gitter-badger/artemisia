@@ -25,12 +25,17 @@ abstract class ExportToFile(name: String, sql: String, connectionProfile: Connec
      /**
       *
       * SQL export to file
-      * @return Empty
+      * @return Config object with key rows and values as total number of rows exports
       */
      override protected[task] def work(): Config = {
        val rs = dbInterface.query(sql)
-       DBUtil.exportCursorToFile(rs,exportSettings)
-       ConfigFactory.empty()
+       val records = DBUtil.exportCursorToFile(rs,exportSettings)
+       wrapAsStats {
+         ConfigFactory parseString
+           s"""
+             | rows = $records
+           """.stripMargin
+       }
      }
 
      override protected[task] def teardown(): Unit = {}

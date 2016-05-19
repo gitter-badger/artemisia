@@ -42,6 +42,7 @@ object Keywords {
   }
 
   object TaskStats {
+    val STATS = "__stats__"
     val QUEUE_TIME = "queue_time"
     val START_TIME = "start_time"
     val END_TIME = "end_time"

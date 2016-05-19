@@ -36,8 +36,6 @@ object TestDBInterFactory {
    */
   val stubbedConnectionProfile = ConnectionProfile("","","","",-1)
 
-
-
 }
 
 

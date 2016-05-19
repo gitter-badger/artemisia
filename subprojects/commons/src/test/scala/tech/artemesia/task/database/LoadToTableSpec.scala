@@ -1,7 +1,9 @@
 package tech.artemesia.task.database
 
 import tech.artemesia.TestSpec
-import tech.artemesia.task.settings.{LoadSettings, ConnectionProfile}
+import tech.artemesia.task.settings.{ConnectionProfile, LoadSettings}
+import tech.artemesia.util.FileSystemUtil._
+import tech.artemesia.util.HoconConfigUtil.Handler
 
 /**
  * Created by chlr on 5/18/16.
@@ -10,12 +12,23 @@ class LoadToTableSpec extends TestSpec {
 
   "LoadToTable" must "load a file into the given table" in {
     val tableName = "LoadToTableSpec"
-//    val connectionProfile = TestDBInterFactory.stubbedConnectionProfile
-//    val loadSettings = LoadSettings()
-//    LoadToTableSpec.loader(tableName)
-
+    withTempFile(fileName = s"${tableName}_1") {
+      file => {
+        file <<=
+          """|102\u0001magneto
+             |103\u0001xavier
+             |104\u0001wolverine
+             |105\u0001mystique
+             |106\u0001quicksilver""".stripMargin
+        val loadSettings = LoadSettings(file.toURI, delimiter = '\u0001')
+        val loader = LoadToTableSpec.loader("LoadToTableSpec1",tableName, TestDBInterFactory.stubbedConnectionProfile,loadSettings)
+        val config = loader.execute()
+        config.as[Int]("test_task.__stats__.loaded")must be (4)
+        config.as[Int]("test_task.__stats__.rejected")must be (1
+        )
+      }
+    }
   }
-
 }
 
 object LoadToTableSpec {

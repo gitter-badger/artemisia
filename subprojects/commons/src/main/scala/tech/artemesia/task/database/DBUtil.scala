@@ -19,8 +19,8 @@ object DBUtil {
     * @todo emit total number of records exported
     * @return total no of rows exported
     */
-   def exportCursorToFile(resultSet: ResultSet, exportSettings: ExportSetting) = {
-     var recordCounter = 0
+   def exportCursorToFile(resultSet: ResultSet, exportSettings: ExportSetting): Long = {
+     var recordCounter = 0L
      AppLogger info s"exporting result-set to file: ${exportSettings.file.getPath}"
      val buffer = new BufferedWriter(new FileWriter(new File(exportSettings.file)))
      val csvWriter = new CSVWriter(buffer, exportSettings.delimiter,
