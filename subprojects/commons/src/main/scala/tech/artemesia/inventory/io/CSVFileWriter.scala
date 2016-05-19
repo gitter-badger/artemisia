@@ -26,5 +26,4 @@ class CSVFileWriter(settings: ExportSetting) extends FileDataWriter {
     writer.close()
   }
 
-
 }

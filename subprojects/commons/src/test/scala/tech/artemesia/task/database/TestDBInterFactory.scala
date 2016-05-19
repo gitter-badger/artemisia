@@ -2,6 +2,8 @@ package tech.artemesia.task.database
 
 import java.sql.{Connection, DriverManager}
 
+import tech.artemesia.task.settings.ConnectionProfile
+
 /**
  * Created by chlr on 4/27/16.
  */
@@ -27,6 +29,13 @@ object TestDBInterFactory {
     dbInterface.execute(s"INSERT INTO $table VALUES (1, 'foo')")
     dbInterface.execute(s"INSERT INTO $table VALUES (2, 'bar')")
   }
+
+  /**
+   * This is stubbed ConnectionProfile object primarily to be used along with H2 database which doesn't require a connectionProfile object to work with.
+   * @return ConnectionProfile object
+   */
+  val stubbedConnectionProfile = ConnectionProfile("","","","",-1)
+
 
 
 }

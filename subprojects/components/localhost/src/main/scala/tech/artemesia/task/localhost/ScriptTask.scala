@@ -1,12 +1,14 @@
 package tech.artemesia.task.localhost
 
 import java.nio.file.Paths
+
 import com.typesafe.config.{Config, ConfigFactory}
 import tech.artemesia.core.AppLogger
+import tech.artemesia.task.{TaskContext, Task}
 import tech.artemesia.task.localhost.util.ProcessRunner
-import tech.artemesia.task.Task
-import tech.artemesia.util.Util
+import tech.artemesia.util.FileSystemUtil.{FileEnhancer, withTempFile}
 import tech.artemesia.util.HoconConfigUtil.Handler
+import tech.artemesia.util.Util
 
 /**
  * Created by chlr on 2/21/16.
@@ -26,17 +28,21 @@ class ScriptTask(name: String = Util.getUUID, script: String,interpreter: String
   override def work(): Config = {
     AppLogger info s"executing script"
     AppLogger info Util.prettyPrintAsciiTable(script, heading = "script")
-    val result = processRunner.executeFile(cwd,env) {
-      this.getFileHandle(scriptFileName).toPath.toAbsolutePath.toString
-    }
-    if (result._1.length > 0)
-      AppLogger debug s"stdout detected: ${result._1}"
-    if (result._2.length > 0)
-      AppLogger debug s"stderr detected: ${result._2}"
-    assert(result._3 == 0, "Non Zero return code detected")
-      ConfigFactory parseString {
-        if (parseOutput) result._1 else ""
+    var result: (String, String, Int) = null
+    withTempFile(TaskContext.workingDir.toString,this.getFileHandle(scriptFileName).toString) {
+      file => {
+        file <<= script
+         result = processRunner.executeFile(cwd,env) {
+          file.toPath.toAbsolutePath.toString
+        }
       }
+    }
+
+    AppLogger debug s"stdout detected: ${result._1}"
+    AppLogger debug s"stderr detected: ${result._2}"
+
+    assert(result._3 == 0, "Non Zero return code detected")
+    ConfigFactory parseString { if (parseOutput) result._1 else "" }
   }
 
   override def teardown(): Unit = {}

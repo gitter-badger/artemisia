@@ -2,7 +2,6 @@ package tech.artemesia.util
 
 import java.io._
 import java.net.URI
-import tech.artemesia.task.TaskContext
 
 import scala.io.Source
 
@@ -75,13 +74,14 @@ object FileSystemUtil {
   }
 
   /**
-   * an utility function that works similar to try with resources
+   * an utility function that works similar to try with resources.
+   * the resource here is the file and in the end the file is deleted
    * @param fileName name of the file to be created
    * @param body the code block that takes the newly created file as input
    * @return
    */
-  def withFile(fileName: String)(body: File => Unit): Unit = {
-    val file = new File(TaskContext.workingDir.toFile,fileName)
+  def withTempFile(directory: String = null,fileName: String)(body: File => Unit): Unit = {
+    val file = if (directory == null) File.createTempFile(fileName, null) else File.createTempFile(fileName, null, new File(directory))
     body(file)
     file.delete()
   }

@@ -84,8 +84,21 @@ trait DBInterface {
     result
   }
 
+  /**
+   * Load data to a table typically from a file.
+   *
+   * @param tableName destination table
+   * @param loadSettings load settings
+   * @return tuple of total records in source and number of records rejected
+   */
   def load(tableName: String, loadSettings: LoadSettings) = {
-    self.loadData(tableName, loadSettings)
+    val (total,rejected) = self.loadData(tableName, loadSettings)
+    if (loadSettings.errorTolerance > -1) {
+      val errorPct = (rejected.asInstanceOf[Float] / total) * 100
+      assert( errorPct < loadSettings.errorTolerance ,
+        s"Load Error % ${"%3.2f".format(errorPct)} greater than defined limit: ${loadSettings.errorTolerance}")
+    }
+    total -> rejected
   }
 
   /**

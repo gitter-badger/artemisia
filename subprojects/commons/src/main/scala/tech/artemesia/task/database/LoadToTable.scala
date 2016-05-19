@@ -15,9 +15,12 @@ abstract class LoadToTable(name: String, tablename: String, connectionProfile: C
   val dbInterface: DBInterface
 
   override def work(): Config = {
-    val recordCnt = dbInterface.load(tablename, loadSettings)
-    AppLogger info s"$recordCnt rows loaded into table $tablename"
-    ConfigFactory parseString s" { rows = $recordCnt }"
+    val (loadedCnt, rejectedCnt) = dbInterface.load(tablename, loadSettings)
+    AppLogger info s"$loadedCnt rows loaded into table $tablename"
+    AppLogger info s"$rejectedCnt row were rejected"
+    val rejectPct = (rejectedCnt.asInstanceOf[Float] / (loadedCnt+rejectedCnt)) * 100
+    assert(rejectPct > loadSettings.errorTolerance, "load completed with acceptable tolerance")
+    ConfigFactory parseString s" { rows = $loadedCnt }"
   }
 
 }
