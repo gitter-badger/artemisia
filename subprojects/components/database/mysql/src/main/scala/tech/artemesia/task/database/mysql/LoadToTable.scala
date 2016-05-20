@@ -12,7 +12,7 @@ import tech.artemesia.util.HoconConfigUtil.Handler
 class LoadToTable(name: String = Util.getUUID, tablename: String, connectionProfile: ConnectionProfile, loadSettings: LoadSettings)
   extends tech.artemesia.task.database.LoadToTable(name, tablename, connectionProfile, loadSettings) {
 
-  override val dbInterface: DBInterface = new MysqlDBInterface(connectionProfile)
+  override val dbInterface: DBInterface = DbInterfaceFactory.getInstance(connectionProfile, loadSettings.mode)
 
   /**
    * No operations are done in this phase

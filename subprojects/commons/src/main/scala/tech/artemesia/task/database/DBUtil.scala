@@ -64,7 +64,7 @@ object DBUtil {
 
   /**
    * takes a tablename literal and parses the optional databasename part and the tablename part
-   * @param tableName
+   * @param tableName input table of format <databasename>.<tablename>
    * @return
    */
   def parseTableName(tableName: String): (Option[String],String) = {

@@ -1,7 +1,7 @@
 package tech.artemesia.task.database.mysql
 
 import tech.artemesia.core.AppLogger
-import tech.artemesia.task.database.DataLoader
+import tech.artemesia.task.database.{DBInterface, DataLoader}
 import tech.artemesia.task.settings.LoadSettings
 
 /**
@@ -9,7 +9,7 @@ import tech.artemesia.task.settings.LoadSettings
  */
 
 trait MySQLDataLoader extends DataLoader {
-  self: MysqlDBInterface =>
+  self: DBInterface =>
 
   override def loadData(tableName: String, loadSettings: LoadSettings) = {
     AppLogger debug "error file is ignored in this mode"

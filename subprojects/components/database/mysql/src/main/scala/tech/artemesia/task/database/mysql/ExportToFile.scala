@@ -15,7 +15,7 @@ import tech.artemesia.task.settings.{ExportSetting, ConnectionProfile}
 class ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting)
   extends tech.artemesia.task.database.ExportToFile(name: String, sql: String, connectionProfile: ConnectionProfile ,exportSettings: ExportSetting) {
 
-  override val dbInterface: DBInterface = new MysqlDBInterface(connectionProfile)
+  override val dbInterface: DBInterface = DbInterfaceFactory.getInstance(connectionProfile)
 
   override protected[task] def setup(): Unit = {
     assert(exportSettings.file.getScheme == "file", "LocalFileSystem is the only supported destination")
