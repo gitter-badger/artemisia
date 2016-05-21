@@ -1,5 +1,7 @@
 package tech.artemisia.task.settings
 
+import java.io.File
+
 import com.typesafe.config.ConfigFactory
 import tech.artemisia.TestSpec
 
@@ -27,6 +29,6 @@ class LoadSettingsSpec extends TestSpec {
     setting.skipRows must be (10)
     setting.delimiter must be ('\t')
     setting.quotechar must be ('"')
-    setting.location.toString must be ("export.dat")
+    new File(setting.location).toPath.getFileName.toString must be ("export.dat")
   }
 }
