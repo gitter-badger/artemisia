@@ -4,16 +4,14 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/all.iml" filepath="$PROJECT_DIR$/.idea/modules/all.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/all-build.iml" filepath="$PROJECT_DIR$/.idea/modules/all-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/artemesia-build.iml" filepath="$PROJECT_DIR$/.idea/modules/artemesia-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/artemisia.iml" filepath="$PROJECT_DIR$/.idea/modules/artemisia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/artemisia-build.iml" filepath="$PROJECT_DIR$/.idea/modules/artemisia-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/commons.iml" filepath="$PROJECT_DIR$/.idea/modules/commons.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/commons-build.iml" filepath="$PROJECT_DIR$/.idea/modules/commons-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/localhost.iml" filepath="$PROJECT_DIR$/.idea/modules/localhost.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/localhost-build.iml" filepath="$PROJECT_DIR$/.idea/modules/localhost-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mysql.iml" filepath="$PROJECT_DIR$/.idea/modules/mysql.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mysql-build.iml" filepath="$PROJECT_DIR$/.idea/modules/mysql-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ultron.iml" filepath="$PROJECT_DIR$/.idea/modules/ultron.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ultron-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ultron-build.iml" />
     </modules>
   </component>
 </project>

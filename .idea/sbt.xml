@@ -3,6 +3,7 @@
   <component name="ScalaSbtSettings">
     <option name="linkedExternalProjectsSettings">
       <SbtProjectSettings>
+        <option name="createEmptyContentRootDirectories" value="true" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="jdk" value="1.8" />
         <option name="modules">
@@ -19,8 +20,6 @@
             <option value="$PROJECT_DIR$/subprojects/components/localhost/project" />
           </set>
         </option>
-        <option name="resolveClassifiers" value="true" />
-        <option name="resolveSbtClassifiers" value="true" />
         <option name="sbtVersion" value="0.13.8" />
         <option name="useAutoImport" value="true" />
         <option name="useOurOwnAutoImport" value="true" />

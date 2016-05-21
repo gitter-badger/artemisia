@@ -12,9 +12,9 @@ coverageEnabled.in(ThisBuild ,Test, test) := true
 
 
 lazy val artemisia = (project in file(".")).enablePlugins(JavaAppPackaging)
-  .settings(General.settings("artemesia"))
+  .settings(General.settings("artemisia"))
   .settings(
-  libraryDependencies ++= Artemesia.dependencies
+  libraryDependencies ++= Artemisia.dependencies
 ).dependsOn(commons % "compile->compile;test->test", localhost, mysql)
 
 
@@ -32,13 +32,13 @@ lazy val mysql = (project in General.componentBase / "database" / "mysql").enabl
   .settings(MySQL.settings)
 
 
-lazy val all = (project in file("all")).aggregate(artemesia ,commons,localhost, mysql)
+lazy val all = (project in file("all")).aggregate(artemisia ,commons,localhost, mysql)
   .enablePlugins(JavaAppPackaging)
   .settings(unidocSettings)
   .settings(site.settings ++ ghpages.settings: _*)
   .settings(
     coverageEnabled := true,
-    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(artemesia),
+    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(artemisia),
     site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
     gitRemoteRepo := "git@github.com:mig-foxbat/artemesia.git"
   )
