@@ -11,7 +11,7 @@ coverageEnabled.in(ThisBuild ,Test, test) := true
 //addCommandAlias("full-test", "clean;test;coverageReport")
 
 
-lazy val artemesia = (project in file(".")).enablePlugins(JavaAppPackaging)
+lazy val artemisia = (project in file(".")).enablePlugins(JavaAppPackaging)
   .settings(General.settings("artemesia"))
   .settings(
   libraryDependencies ++= Artemesia.dependencies

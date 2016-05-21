@@ -4,8 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/all.iml" filepath="$PROJECT_DIR$/.idea/modules/all.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/all-build.iml" filepath="$PROJECT_DIR$/.idea/modules/all-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/artemesia.iml" filepath="$PROJECT_DIR$/.idea/modules/artemesia.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/artemesia-build.iml" filepath="$PROJECT_DIR$/.idea/modules/artemesia-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/artemisia.iml" filepath="$PROJECT_DIR$/.idea/modules/artemisia.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/commons.iml" filepath="$PROJECT_DIR$/.idea/modules/commons.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/commons-build.iml" filepath="$PROJECT_DIR$/.idea/modules/commons-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/localhost.iml" filepath="$PROJECT_DIR$/.idea/modules/localhost.iml" />
