@@ -8,19 +8,19 @@ class FileSystemUtilSpec extends TestSpec  {
 
   "joinPath" must "Join multiple path strings into valid path string" in {
     var path1 = "/var/tmp"
-    var path2 = "artemesia"
+    var path2 = "artemisia"
     var path3 = ""
-    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemesia")
+    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemisia")
     path1 = "/var/tmp/"
-    path2 = "/artemesia"
-    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemesia")
+    path2 = "/artemisia"
+    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemisia")
     path1 = "/var/tmp"
-    path2 = "/artemesia"
-    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemesia")
+    path2 = "/artemisia"
+    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemisia")
     path1 = "var"
     path2 = "tmp"
-    path3 = "artemesia"
-    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemesia")
+    path3 = "artemisia"
+    FileSystemUtil.joinPath (path1,path2,path3) must be ("/var/tmp/artemisia")
   }
 
   "makeURI" must "properly construct URI object" in {
