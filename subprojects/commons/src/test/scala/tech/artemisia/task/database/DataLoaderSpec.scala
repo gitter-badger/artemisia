@@ -86,4 +86,26 @@ class DataLoaderSpec extends TestSpec {
   }
 
 
+  it must "handle blank string as null" in {
+    val tableName = "DataLoaderSpec_4"
+    val dbInterface = TestDBInterFactory.withDefaultDataLoader(tableName)
+    dbInterface.execute(s"delete from $tableName")
+    withTempFile(fileName = tableName) {
+      file => {
+        val loadSettings = LoadSettings(file.toURI, delimiter = ',')
+        file <<=
+          """|100,tango
+             |101,bravo
+             |102,
+             |,victor""".stripMargin
+          dbInterface.load(tableName,loadSettings)
+        var result = dbInterface.queryOne(s"SELECT col1 FROM $tableName WHERE col2 IS NULL")
+        result.as[Int]("COL1") must be (102)
+        result = dbInterface.queryOne(s"SELECT col2 FROM $tableName WHERE col1 IS NULL")
+        result.as[String]("COL2") must be ("victor")
+      }
+    }
+  }
+
+
 }
