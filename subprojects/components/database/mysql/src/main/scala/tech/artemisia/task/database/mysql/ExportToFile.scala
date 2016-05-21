@@ -3,10 +3,9 @@ package tech.artemisia.task.database.mysql
 
 
 import com.typesafe.config.Config
-import tech.artemisia.task.settings.{SettingNotFoundException, ExportSetting, ConnectionProfile}
-import tech.artemisia.util.HoconConfigUtil.Handler
 import tech.artemisia.task.database.DBInterface
-import tech.artemisia.task.settings.{ExportSetting, ConnectionProfile}
+import tech.artemisia.task.settings.{ConnectionProfile, ExportSetting, SettingNotFoundException}
+import tech.artemisia.util.HoconConfigUtil.Handler
 
 /**
  * Created by chlr on 4/22/16.
@@ -31,11 +30,9 @@ object ExportToFile {
    * @param config configuration for the task
    * @return ExportToFile object
    */
-  def apply(name: String,inputConfig: Config) = {
-
-    val config = inputConfig withFallback defaultConfig
+  def apply(name: String,config: Config) = {
     val exportSettings = ExportSetting(config.as[Config]("export"))
-    val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
+    val connectionProfile = ConnectionProfile.parseConnectionProfile(config.getValue("dsn"))
     val sql =
       if (config.hasPath("sql")) config.as[String]("sql")
       else if (config.hasPath("sqlfile")) config.asFile("sqlfile")

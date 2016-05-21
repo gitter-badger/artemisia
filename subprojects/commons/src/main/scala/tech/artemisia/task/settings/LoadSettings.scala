@@ -4,6 +4,7 @@ import java.net.URI
 
 import com.typesafe.config.{Config, ConfigFactory}
 import tech.artemisia.util.HoconConfigUtil.Handler
+import tech.artemisia.util.URIParser
 
 /**
  * Created by chlr on 4/30/16.
@@ -30,7 +31,7 @@ object LoadSettings {
       |	quoting = no
       |	quotechar = "\""
       | escapechar = "\\"
-      | mode = generic
+      | mode = default
       | error-file = null
       | error-tolerence = 2
       |}
@@ -39,7 +40,7 @@ object LoadSettings {
   def apply(inputConfig: Config): LoadSettings = {
     val config = inputConfig withFallback default_config
     LoadSettings (
-    location = new URI(config.as[String]("load-path")),
+    location = URIParser.parse(config.as[String]("load-path")),
     skipRows = if (config.as[Int]("skip-lines") == 0) if (config.as[Boolean]("header")) 1 else 0 else config.as[Int]("skip-lines"),
     delimiter = config.as[Char]("delimiter"),
     quoting = config.as[Boolean]("quoting"),

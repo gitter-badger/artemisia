@@ -28,9 +28,8 @@ class LoadToTable(name: String = Util.getUUID, tablename: String, connectionProf
 
 object LoadToTable {
 
-  def apply(name: String, inputConfig: Config): LoadToTable = {
-    val config = inputConfig withFallback defaultConfig
-    val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
+  def apply(name: String, config: Config): LoadToTable = {
+    val connectionProfile = ConnectionProfile.parseConnectionProfile(config.getValue("dsn"))
     val destinationTable = config.as[String]("destination-table")
     val loadSettings = LoadSettings(config.as[Config]("load-setting"))
     new LoadToTable(name, destinationTable, connectionProfile, loadSettings)

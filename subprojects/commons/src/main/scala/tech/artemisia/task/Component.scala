@@ -1,7 +1,6 @@
 package tech.artemisia.task
 
 import com.typesafe.config.Config
-import tech.artemisia.core.Keywords.Task
 
 /**
  * Created by chlr on 3/3/16.

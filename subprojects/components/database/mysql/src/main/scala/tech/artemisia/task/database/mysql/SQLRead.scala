@@ -1,11 +1,9 @@
 package tech.artemisia.task.database.mysql
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import tech.artemisia.task.database.DBInterface
-import tech.artemisia.task.settings.{SettingNotFoundException, ConnectionProfile}
-import tech.artemisia.util.Util
+import tech.artemisia.task.settings.{ConnectionProfile, SettingNotFoundException}
 import tech.artemisia.util.HoconConfigUtil.Handler
-import tech.artemisia.task.database.DBInterface
 import tech.artemisia.util.Util
 
 class SQLRead(name: String = Util.getUUID, sql: String, connectionProfile: ConnectionProfile)
@@ -24,10 +22,8 @@ object SQLRead {
    * @param config configuration for the task
    * @return ExportToFile object
    */
-  def apply(name: String,inputConfig: Config) = {
-
-    val config = inputConfig withFallback defaultConfig
-    val connectionProfile = ConnectionProfile.parseConnectionProfile(config)
+  def apply(name: String, config: Config) = {
+    val connectionProfile = ConnectionProfile.parseConnectionProfile(config.getValue("dsn"))
     val sql =
       if (config.hasPath("sql")) config.as[String]("sql")
       else if (config.hasPath("sqlfile")) config.asFile("sqlfile")

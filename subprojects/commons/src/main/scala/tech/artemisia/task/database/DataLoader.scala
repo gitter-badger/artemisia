@@ -30,7 +30,7 @@ trait DataLoader {
    */
   def loadData(tableName: String, loadSettings: LoadSettings) = {
 
-    assert(loadSettings.location.getScheme == "file", "File URI is the only supported URI")
+    assert(loadSettings.location.getScheme == "file", s"schema ${loadSettings.location.getScheme} is not supported. file:// is the only supported schema")
 
     val csvReader = new CSVFileReader(loadSettings)
     val errorWriter = loadSettings.rejectFile.map( x => new CSVFileWriter(ExportSetting(new File(x).toURI,false,'\u0001',false)) ).getOrElse(NullFileWriter)
@@ -138,6 +138,7 @@ trait DataLoader {
     csvReader.rowCounter -> rejectedRecordCounter
   }
 }
+
 
 
 

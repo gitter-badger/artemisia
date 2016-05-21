@@ -1,6 +1,6 @@
 package tech.artemisia.task.settings
 
-import com.typesafe.config.{Config, ConfigRenderOptions, ConfigValueType}
+import com.typesafe.config._
 import tech.artemisia.util.HoconConfigUtil
 import HoconConfigUtil.Handler
 import tech.artemisia.core.Keywords
@@ -32,13 +32,13 @@ object ConnectionProfile {
 
   /**
    *
-   * @param config
+   * @param config input config that has a node dsn
    * @return
    */
-  def parseConnectionProfile(config: Config) = {
-    config.getValue("dsn").valueType() match {
-      case ConfigValueType.STRING => ConnectionProfile(config.as[String]("dsn"))
-      case ConfigValueType.OBJECT => ConnectionProfile(config.as[Config]("dsn"))
+  def parseConnectionProfile(input: ConfigValue) = {
+    input.valueType() match {
+      case ConfigValueType.STRING => ConnectionProfile(input.unwrapped().asInstanceOf[String])
+      case ConfigValueType.OBJECT => ConnectionProfile(ConfigFactory.empty withFallback input)
       case x @ _ => throw new IllegalArgumentException(s"Invalid connection node with type $x}")
     }
   }
