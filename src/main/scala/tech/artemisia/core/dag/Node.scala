@@ -24,10 +24,11 @@ class Node(val name: String, var payload: Config) {
   var parents: LinearSeq[Node] = Nil
 
   def isRunnable = {
-    (parents forall { node => {
-        node.status == core.dag.Status.SUCCEEDED || node.status == core.dag.Status.SKIPPED
-      }
-    }) && this.status == core.dag.Status.READY // forall for Nil returns true
+    (parents forall { _.isComplete }) && this.status == core.dag.Status.READY // forall for Nil returns true
+  }
+
+  def isComplete = {
+    Seq(Status.SUCCEEDED, Status.SKIPPED, Status.FAILURE_IGNORED) contains status
   }
 
   def getNodeTask(app_context: AppContext): TaskHandler = {
@@ -52,10 +53,7 @@ class Node(val name: String, var payload: Config) {
   def getStatus = status
 
   def applyStatusFromCheckpoint(checkpointStatus: Status.Value): Unit = {
-    if (status == Status.SUCCEEDED || status == Status.SKIPPED) {
-      AppLogger info s"applying checkpoint status $checkpointStatus for node $name"
-      this.status = checkpointStatus
-    }
+
     checkpointStatus match {
       case Status.SUCCEEDED => {
         AppLogger info s"marking node $name status as $checkpointStatus from checkpoint"
@@ -68,6 +66,9 @@ class Node(val name: String, var payload: Config) {
       case Status.FAILED => {
         AppLogger info s"detected node $name from checkpoint has ${Status.FAILED}. setting node status as ${Status.READY}"
       }
+      case Status.FAILURE_IGNORED => {
+        AppLogger info s"marking node $name status as $checkpointStatus from checkpoint"
+    }
       case _ => {
         AppLogger warn s"node $name has an unhandled status of $checkpointStatus}. setting node status as ${Status.READY}"
       }
@@ -77,6 +78,7 @@ class Node(val name: String, var payload: Config) {
   override def toString = {
     s"$name"
   }
+
 }
 
 object Node {

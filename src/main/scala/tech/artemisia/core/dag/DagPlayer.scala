@@ -32,7 +32,6 @@ class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends
       if (dag.hasCompleted) {
         AppLogger info "all tasks completed. System shutting down"
         context.system.shutdown()
-        sys.exit(0)
       }
       else {
         dag.getRunnableNodes foreach {
@@ -75,9 +74,16 @@ class DagPlayer(dag: Dag, app_context: AppContext, val router: ActorRef) extends
 
     case message: TaskFailed => {
       AppLogger info s"task ${message.name} execution failed. committing checkpoint"
-      checkpoint(message.name,message.task_stats)
-      context.become(preReceive andThen (woundedDag orElse onTaskComplete))
+      checkpoint(message.name,message.taskStats)
       AppLogger info s"checkpoint completed successfully for ${message.name}"
+      message.taskStats.status match {
+        case Status.FAILED => {
+          context.become(preReceive andThen (woundedDag orElse onTaskComplete))
+        }
+        case Status.FAILURE_IGNORED => {
+          AppLogger info s"task ${Keywords.Task.IGNORE_ERROR} property set to true. Ignoring error"
+        }
+      }
     }
 
   }

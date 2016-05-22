@@ -25,8 +25,9 @@ class Worker extends Actor {
         }
       } recover {
           case th: Throwable => {
-            TaskFailed(message.name,TaskStats(start_time,Util.currentTime,Status.FAILED,
-            message.task.getAttempts,ConfigFactory.empty()),th)
+            TaskFailed(message.name,TaskStats(start_time, Util.currentTime,
+              if(message.task.taskConfig.ignoreFailure) Status.FAILURE_IGNORED else Status.FAILED,
+            message.task.getAttempts, ConfigFactory.empty()), th)
           }
       }
       sender ! result.get

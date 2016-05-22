@@ -33,8 +33,8 @@ object Keywords {
     val COMPONENT = "Component"
     val TASK = "Task"
     val DEPENDENCY = "dependencies"
-    val IGNORE_ERROR = "ignore_error"
-    val SKIP_EXECUTION = "skip_execution"
+    val IGNORE_ERROR = "ignore-error"
+    val SKIP_EXECUTION = "skip-execution"
     val COOLDOWN = "cooldown"
     val ATTEMPT = "attempts"
     val PARAMETERS = "params"
@@ -43,9 +43,9 @@ object Keywords {
 
   object TaskStats {
     val STATS = "__stats__"
-    val QUEUE_TIME = "queue_time"
-    val START_TIME = "start_time"
-    val END_TIME = "end_time"
+    val QUEUE_TIME = "queue-time"
+    val START_TIME = "start-time"
+    val END_TIME = "end-time"
     val STATUS = "status"
     val DURATION = "duration"
     val ATTEMPT = "attempts"

@@ -17,7 +17,7 @@ import scala.concurrent.duration.FiniteDuration
 /*
 TaskConfig requires task_name param because the generic Task node requires task_name variable which will be used in logging.
  */
-case class TaskConfig(taskName: String = null,retryLimit : Int, cooldown: FiniteDuration, skipExecution: Boolean = false, ignoreFailure: Boolean = false) {
+case class TaskConfig(taskName: String, retryLimit : Int, cooldown: FiniteDuration, skipExecution: Boolean = false, ignoreFailure: Boolean = false) {
 
 }
 

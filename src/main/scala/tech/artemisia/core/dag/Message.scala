@@ -17,7 +17,8 @@ object Message {
 
   class TaskCompleted extends Messageable
 
-  case class TaskFailed(name: String, task_stats: TaskStats, exception: Throwable) extends TaskCompleted
+  case class TaskFailed(name: String, taskStats: TaskStats, exception: Throwable)
+    extends TaskCompleted
 
   case class TaskWrapper(name: String,task: TaskHandler) extends Messageable
 

@@ -12,22 +12,22 @@ import scala.util.{Failure, Success, Try}
  * Created by chlr on 1/7/16.
  */
 
-class TaskHandler(val taskMetadata: TaskConfig, val task: Task) {
+class TaskHandler(val taskConfig: TaskConfig, val task: Task) {
 
-  task.setLogSource(LogSource(taskMetadata.taskName))
+  task.setLogSource(LogSource(taskConfig.taskName))
   private var attempts = 0
   private var status: Status.Value = Status.UNKNOWN
 
   final def execute(): Try[Config] = {
-    if(!taskMetadata.skipExecution) {
-      AppLogger info s"running task with total allowed attempts of ${taskMetadata.retryLimit}"
-      val result = run(maxAttempts = taskMetadata.retryLimit) {
+    if(!taskConfig.skipExecution) {
+      AppLogger info s"running task with total allowed attempts of ${taskConfig.retryLimit}"
+      val result = run(maxAttempts = taskConfig.retryLimit) {
           AppLogger debug "executing setup phase of the task"
           task.setup()
           AppLogger debug "executing work phase of the task"
           task.work()
       }
-      try {
+      try {   // teardown must run even if the task setup or work has failed
         AppLogger debug "executing teardown phase of the task"
         task.teardown()
       } catch {
@@ -35,7 +35,7 @@ class TaskHandler(val taskMetadata: TaskConfig, val task: Task) {
       }
       result
     } else {
-      AppLogger info s"skipping execution of ${taskMetadata.taskName}. ${Task.SKIP_EXECUTION} flag is set"
+      AppLogger info s"skipping execution of ${taskConfig.taskName}. ${Task.SKIP_EXECUTION} flag is set"
       status = Status.SKIPPED
       Success(ConfigFactory.empty())
     }
@@ -49,10 +49,9 @@ class TaskHandler(val taskMetadata: TaskConfig, val task: Task) {
       Success(result)
     } catch {
       case ex: Throwable => {
-        AppLogger info s"attempt ${taskMetadata.retryLimit - maxAttempts + 1} for task ${taskMetadata.taskName}"
+        AppLogger info s"attempt ${taskConfig.retryLimit - maxAttempts + 1} for task ${taskConfig.taskName}"
         AppLogger error Util.printStackTrace(ex)
         if (maxAttempts > 1) {
-
           run(maxAttempts -1)(body)
         }
         else {

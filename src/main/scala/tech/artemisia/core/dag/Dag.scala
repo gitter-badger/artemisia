@@ -83,10 +83,7 @@ private[dag] class Dag(node_list: LinearSeq[Node], checkpoints: mutable.Map[Stri
   }
 
   def hasCompleted = {
-    graph forall { node => {
-      node.getStatus == Status.SUCCEEDED || node.getStatus == Status.SKIPPED
-      }
-    }
+    graph forall { _.isComplete }
   }
 
   def getRunnableNodes: LinearSeq[Node] = {

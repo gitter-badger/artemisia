@@ -33,7 +33,6 @@ class DagPlayerSpec extends ActorTestSpec {
   "DagPlayer" must "execute all tasks in the Dag" in {
 
     setUpArtifacts(this.getClass.getResource("/code/multi_step_addition_job.conf").getFile)
-
     info("Sending tick 1")
     dag_player ! new Tick
 
@@ -70,9 +69,7 @@ class DagPlayerSpec extends ActorTestSpec {
   "DagPlayer" must "must handle error" in {
 
     setUpArtifacts(this.getClass.getResource("/code/multi_step_addition_with_failure.conf").getFile)
-
     info("Sending tick 1")
-
     dag_player ! new Tick
 
     probe.validateAndRelay(workers) {
@@ -107,7 +104,41 @@ class DagPlayerSpec extends ActorTestSpec {
   }
 
 
+  "DagPlayer" must "handle ignore-error" in {
 
+    setUpArtifacts(this.getClass.getResource("/code/multi_step_with_failure_ignored.conf").getFile)
+    info("Sending tick 1")
+    dag_player ! new Tick
+
+    probe.validateAndRelay(workers) {
+      case TaskWrapper("step1",task_handler: TaskHandler) => {
+        task_handler.task mustBe a[TestFailTask]
+      }
+    }
+
+    probe.validateAndRelay(dag_player) {
+      case TaskFailed("step1", stats: TaskStats, exception: Throwable) => {
+        stats.status must be(Status.FAILURE_IGNORED)
+        exception.getMessage must be ("FailTask always fail")
+      }
+    }
+
+    info("Sending tick 1")
+    dag_player ! new Tick
+
+    probe.validateAndRelay(workers) {
+      case TaskWrapper("step2",task_handler: TaskHandler) => {
+        task_handler.task mustBe a[TestAdderTask]
+      }
+    }
+
+    probe.validateAndRelay(dag_player) {
+      case TaskSuceeded("step2", stats: TaskStats) => {
+        stats.status must be(Status.SUCCEEDED)
+      }
+    }
+  }
+  
 
   def setUpArtifacts(code: String) = {
     app_settings = AppSetting(value = Some(code),skip_checkpoints = true)

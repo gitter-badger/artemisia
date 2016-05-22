@@ -89,9 +89,9 @@ class AppContextTestSpec extends TestSpec {
     app_context = new AppContext(cmd)
     app_context.writeCheckpoint(task_name,AppContextTestSpec.getTaskStatsConfigObject)
     val checkpoint = ConfigFactory.parseFile(new File(FileSystemUtil.joinPath(test_working_dir,"checkpoint.conf")))
-    info("validating end_time")
+    info("validating end-time")
     checkpoint.getString(s"$task_name.${Keywords.TaskStats.END_TIME}") must be ("2016-01-18 22:27:52")
-    info("validating start_time")
+    info("validating start-time")
     checkpoint.getString(s"$task_name.${Keywords.TaskStats.START_TIME}") must be ("2016-01-18 22:27:51")
 
   }
